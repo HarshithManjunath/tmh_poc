@@ -10,7 +10,6 @@ import { writeJSON } from '../lib/storage/storage'
 
 export default function PreviewPage() {
   const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE)
-  const [collapsed, setCollapsed] = useState(false)
   const [nav, setNav] = useState<NavNode[]>(() => {
     const f = getLatestForm(cancerType)
     return f ? buildNavTree((f.surveyJson as any).pages ?? []) : []
@@ -114,8 +113,7 @@ export default function PreviewPage() {
 
   return (
     <div className="flex h-full">
-      {!collapsed && (
-        <aside className="w-60 bg-white border-r border-slate-200 flex flex-col">
+      <aside className="w-60 bg-white border-r border-slate-200 flex flex-col">
           <div className="p-3">
             <label className="text-sm font-medium text-slate-700">Cancer Type</label>
             <select value={cancerType} onChange={e => chooseType(e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1.5 mt-1">
@@ -133,8 +131,7 @@ export default function PreviewPage() {
             ))}
           </nav>
         </aside>
-      )}
-      {!collapsed && current && current.children && current.children.length > 0 && (
+      {current && current.children && current.children.length > 0 && (
         <aside className="w-60 bg-slate-50 border-r border-slate-200 flex flex-col">
           <div className="p-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{current.title}</p>
@@ -150,12 +147,8 @@ export default function PreviewPage() {
         </aside>
       )}
       <main className="flex-1 overflow-auto bg-white relative">
-        <div className="flex items-center justify-between px-6 pt-4">
+        <div className="px-6 pt-4">
           <h1 className="text-2xl font-bold text-slate-800">Preview Form</h1>
-          <button onClick={() => setCollapsed(c => !c)}
-            className="border border-slate-300 rounded px-3 py-1.5 text-sm bg-white">
-            {collapsed ? 'Show sidebar' : 'Hide sidebar'}
-          </button>
         </div>
         {surveyModel ? (
           <Survey model={surveyModel} />
