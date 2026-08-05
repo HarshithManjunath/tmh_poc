@@ -10,3 +10,25 @@ html, body, #root {
   height: 100%;
   margin: 0;
 }
+
+/* SurveyJS Creator: theme follows the app brand color + taller view */
+.builder-creator {
+  height: 72vh;
+  --brand-hex-light: color-mix(in srgb, var(--brand-hex) 45%, #ffffff);
+  --brand-hex-x10: color-mix(in srgb, var(--brand-hex) 10%, #ffffff);
+  /* Creator chrome */
+  --sjs-primary-background-500: var(--brand-hex);
+  --sjs-primary-background-400: var(--brand-hex-light);
+  --sjs-primary-background-10: var(--brand-hex-x10);
+  --sjs-primary-foreground-100: #ffffff;
+  /* Rendered form fields */
+  --sjs-primary-backcolor: var(--brand-hex);
+  --sjs-primary-backcolor-dark: var(--brand-hex-light);
+  --sjs-primary-backcolor-light: var(--brand-hex-x10);
+  --sjs-primary-forecolor: #ffffff;
+}
+
+.builder-creator .svc-creator-tabbed-menu-item--selected svg,
+.builder-creator .svc-creator-tabbed-menu-item:hover {
+  color: var(--brand-hex);
+}

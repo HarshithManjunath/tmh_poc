@@ -27,5 +27,9 @@ export default function SurveyCreatorWrapper({ json, onChange }: Props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return <SurveyCreatorComponent creator={creator} />
+  return (
+    <div className="builder-creator">
+      <SurveyCreatorComponent creator={creator} />
+    </div>
+  )
 }
