@@ -16,6 +16,9 @@ export default function SurveyCreatorWrapper({ json, onChange }: Props) {
   }
   const creator = creatorRef.current
   useEffect(() => {
+    creator.JSON = json
+  }, [json])
+  useEffect(() => {
     creator.onUploadFile.add(() => {})
     const save = () => onChange(creator.JSON)
     creator.onModified.add(save)
