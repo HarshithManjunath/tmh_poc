@@ -57,7 +57,11 @@ export default function PreviewPage() {
     return m
   }, [surveyJson])
 
-  const select = (pageIdx: number, childIdx?: number) => setSelected({ path: childIdx != null ? [pageIdx, childIdx] : [pageIdx] })
+  const select = (pageIdx: number, childIdx?: number) => {
+    if (childIdx != null) return setSelected({ path: [pageIdx, childIdx] })
+    const kids = nav[pageIdx]?.children
+    setSelected({ path: kids && kids.length > 0 ? [pageIdx, 0] : [pageIdx] })
+  }
 
   const isSelected = (n: NavNode, childIdx?: number) =>
     selected.path[0] === n.pageIndex && (childIdx == null ? selected.path.length === 1 : selected.path[1] === childIdx)
@@ -93,6 +97,12 @@ export default function PreviewPage() {
       return setSelected({ path: [current.pageIndex, 0] })
     }
     if (current.pageIndex + 1 < nav.length) return setSelected({ path: [current.pageIndex + 1] })
+  }
+
+  const previousInSequence = () => {
+    const childIdx = selected.path[1]
+    if (childIdx == null || !current) return
+    if (childIdx - 1 >= 0) setSelected({ path: [current.pageIndex, childIdx - 1] })
   }
 
   const proceedNextSection = () => {
@@ -148,7 +158,7 @@ export default function PreviewPage() {
         {savedMsg && <p className="px-6 text-green-700 text-sm">{savedMsg}</p>}
         <div className="px-6 py-4 border-t border-slate-200 flex items-center gap-3 sticky bottom-0 bg-white">
           {activePanel && (
-            <button onClick={() => setSelected({ path: [current.pageIndex] })}
+            <button onClick={previousInSequence}
               className="border border-slate-300 rounded px-3 py-1.5 text-sm">Previous Question</button>
           )}
           <button onClick={saveResponse} className="border border-slate-300 rounded px-3 py-1.5 text-sm">Save Progress</button>

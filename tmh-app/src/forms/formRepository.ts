@@ -1,5 +1,6 @@
 import { readJSON, listKeys } from '../lib/storage/storage'
 import type { SavedForm } from './formModel'
+import { CANCER_TYPES } from './cancerTypes'
 
 const KEY_PREFIX = 'forms/'
 
@@ -46,7 +47,7 @@ export function getForm(id: string): SavedForm | null {
 
 export function listAll(): SavedForm[] {
   const all: SavedForm[] = []
-  for (const ct of ['Neck', 'Breast', 'Skin', 'Brain']) {
+  for (const ct of CANCER_TYPES as string[]) {
     all.push(...listForms(ct))
   }
   return all.sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1))
