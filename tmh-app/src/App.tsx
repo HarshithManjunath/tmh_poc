@@ -1,0 +1,22 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './auth/LoginPage'
+import HomeLayout from './shell/HomeLayout'
+import BuilderPage from './builder/BuilderPage'
+import PreviewPage from './preview/PreviewPage'
+import { useAuth } from './auth/auth-context'
+
+export default function App() {
+  const { user } = useAuth()
+  if (!user) return (<Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Navigate to="/login" replace />} /></Routes>)
+  return (
+    <Routes>
+      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route element={<HomeLayout />}>
+        <Route path="/" element={<Navigate to="/builder" replace />} />
+        <Route path="/builder" element={<BuilderPage />} />
+        <Route path="/preview" element={<PreviewPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}
