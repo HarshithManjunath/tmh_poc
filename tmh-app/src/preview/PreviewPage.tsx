@@ -4,7 +4,7 @@ import { Survey } from 'survey-react-ui'
 import 'survey-core/survey-core.css'
 import { CANCER_TYPES, DEFAULT_CANCER_TYPE } from '../forms/cancerTypes'
 import { getLatestForm } from '../forms/formRepository'
-import { buildNavTree } from './navTree'
+import { buildNavTree, nodeAtPath } from './navTree'
 import type { NavNode } from './navTree'
 import { writeJSON } from '../lib/storage/storage'
 
@@ -19,30 +19,25 @@ export default function PreviewPage() {
   const [data, setData] = useState<Record<string, any>>({})
   const [savedMsg, setSavedMsg] = useState('')
 
-  const current = useMemo(() => {
-    const [pi] = selected.path
-    return nav[pi] ?? null
-  }, [nav, selected])
+  const section = useMemo(() => nav[selected.path[0]] ?? null, [nav, selected])
+  const current = useMemo(() => nodeAtPath(nav, selected.path), [nav, selected])
 
-  const activePanel = useMemo(() => {
-    if (!current) return null
-    const childIdx = selected.path[1]
-    return childIdx != null ? current.children?.[childIdx] : null
-  }, [current, selected.path])
+  const ownElements = (node: NavNode | null): any[] => {
+    if (!node) return []
+    const src = node.panel ? node.panel.elements : node.page?.elements
+    return (src ?? []).filter((el: any) => el && el.type !== 'panel')
+  }
 
-  // Build a page-scoped survey JSON: the active page, with a single panel shown.
+  const isPureContainer = (node: NavNode): boolean =>
+    !!node.children && node.children.length > 0 && ownElements(node).length === 0
+
+  // Build a page-scoped survey JSON for the deepest selected node.
   const surveyJson = useMemo(() => {
     if (!current) return null
-    const page: any = { ...current.page, elements: [] }
-    if (activePanel) {
-      page.elements = [...(activePanel.panel.elements ?? [])]
-      page.title = activePanel.title
-    } else {
-      // Page-level content: exclude top-level panels so flat pages render inline.
-      page.elements = (current.page.elements ?? []).filter((el: any) => el.type !== 'panel')
-    }
+    const page: any = { elements: ownElements(current), title: current.title }
     return { pages: [page] }
-  }, [current, activePanel])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current?.key])
 
   const surveyModel = useMemo(() => {
     if (!surveyJson) return null
@@ -56,16 +51,21 @@ export default function PreviewPage() {
     return m
   }, [surveyJson])
 
-  const select = (pageIdx: number, childIdx?: number) => {
-    if (childIdx != null) return setSelected({ path: [pageIdx, childIdx] })
-    const kids = nav[pageIdx]?.children
-    setSelected({ path: kids && kids.length > 0 ? [pageIdx, 0] : [pageIdx] })
+  const select = (path: number[]) => {
+    let p = [...path]
+    let node = nodeAtPath(nav, p)
+    while (node && isPureContainer(node)) {
+      p = [...p, 0]
+      node = nodeAtPath(nav, p)
+    }
+    setSelected({ path: p })
   }
 
-  const isSelected = (n: NavNode, childIdx?: number) =>
-    childIdx == null
-      ? selected.path[0] === n.pageIndex
-      : selected.path[0] === n.pageIndex && selected.path[1] === childIdx
+  const isNodeSelected = (path: number[]) =>
+    path.length === selected.path.length && path.every((v, i) => v === selected.path[i])
+
+  const isPathAncestor = (path: number[]) =>
+    path.length < selected.path.length && path.every((v, i) => v === selected.path[i])
 
   const saveResponse = () => {
     if (!current) return
@@ -86,63 +86,89 @@ export default function PreviewPage() {
     setSavedMsg('')
   }
 
+  const preOrderPaths = (root: NavNode): number[][] => {
+    const paths: number[][] = []
+    const walk = (node: NavNode, base: number[]) => {
+      ;(node.children ?? []).forEach((c, i) => {
+        const path = [...base, i]
+        paths.push(path)
+        walk(c, path)
+      })
+    }
+    walk(root, [root.pageIndex])
+    return paths
+  }
+
   const nextInSequence = () => {
-    if (!current) return
-    const childIdx = selected.path[1]
-    if (childIdx != null) {
-      const kids = current.children ?? []
-      if (childIdx + 1 < kids.length) return setSelected({ path: [current.pageIndex, childIdx + 1] })
-      return setSelected({ path: [current.pageIndex] })
+    if (!section) return
+    const paths = preOrderPaths(section)
+    if (paths.length === 0) {
+      if (section.pageIndex + 1 < nav.length) select([section.pageIndex + 1])
+      return
     }
-    if (current.children && current.children.length > 0) {
-      return setSelected({ path: [current.pageIndex, 0] })
-    }
-    if (current.pageIndex + 1 < nav.length) return setSelected({ path: [current.pageIndex + 1] })
+    const idx = paths.findIndex(p => isNodeSelected(p))
+    if (idx === -1) return select(paths[0])
+    if (idx + 1 < paths.length) return select(paths[idx + 1])
+    if (section.pageIndex + 1 < nav.length) return select([section.pageIndex + 1])
   }
 
   const previousInSequence = () => {
-    const childIdx = selected.path[1]
-    if (childIdx == null || !current) return
-    if (childIdx - 1 >= 0) setSelected({ path: [current.pageIndex, childIdx - 1] })
+    if (!section) return
+    const paths = preOrderPaths(section)
+    const idx = paths.findIndex(p => isNodeSelected(p))
+    if (idx - 1 >= 0) return select(paths[idx - 1])
   }
 
   const proceedNextSection = () => {
-    if (!current) return
-    if (current.pageIndex + 1 < nav.length) setSelected({ path: [current.pageIndex + 1] })
+    if (!section) return
+    if (section.pageIndex + 1 < nav.length) select([section.pageIndex + 1])
+  }
+
+  const renderSubs = (nodes: NavNode[] | undefined, prefix: number[]) => {
+    return (nodes ?? []).map((c, ci) => {
+      const path = [...prefix, ci]
+      const expanded = isNodeSelected(path) || isPathAncestor(path)
+      return (
+        <div key={c.key}>
+          <button onClick={() => select(path)}
+            className={`w-full text-left px-3 py-2 rounded text-sm ${isNodeSelected(path) ? 'bg-blue-100 text-blue-900 font-medium' : 'text-slate-600 hover:bg-slate-100'}`}>
+            {c.title}
+          </button>
+          {expanded && c.children && c.children.length > 0 && (
+            <div className="ml-3 space-y-1">{renderSubs(c.children, path)}</div>
+          )}
+        </div>
+      )
+    })
   }
 
   return (
     <div className="flex h-full">
       <aside className="w-60 bg-white border-r border-slate-200 flex flex-col">
-          <div className="p-3">
-            <label className="text-sm font-medium text-slate-700">Cancer Type</label>
-            <select value={cancerType} onChange={e => chooseType(e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1.5 mt-1">
-              {CANCER_TYPES.map(ct => <option key={ct} value={ct}>{ct}</option>)}
-            </select>
-          </div>
-          <nav className="flex-1 overflow-auto p-2 space-y-1">
-            {nav.map((n) => (
-              <div key={n.key}>
-                <button onClick={() => select(n.pageIndex)}
-                  className={`w-full text-left px-3 py-2 rounded text-sm font-medium ${isSelected(n) ? 'bg-blue-100 text-blue-900' : 'text-slate-700 hover:bg-slate-100'}`}>
-                  {n.title}
-                </button>
-              </div>
-            ))}
-          </nav>
-        </aside>
-      {current && current.children && current.children.length > 0 && (
+        <div className="p-3">
+          <label className="text-sm font-medium text-slate-700">Cancer Type</label>
+          <select value={cancerType} onChange={e => chooseType(e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1.5 mt-1">
+            {CANCER_TYPES.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+          </select>
+        </div>
+        <nav className="flex-1 overflow-auto p-2 space-y-1">
+          {nav.map((n) => (
+            <div key={n.key}>
+              <button onClick={() => select([n.pageIndex])}
+                className={`w-full text-left px-3 py-2 rounded text-sm font-medium ${selected.path[0] === n.pageIndex ? 'bg-blue-100 text-blue-900' : 'text-slate-700 hover:bg-slate-100'}`}>
+                {n.title}
+              </button>
+            </div>
+          ))}
+        </nav>
+      </aside>
+      {section && section.children && section.children.length > 0 && (
         <aside className="w-60 bg-slate-50 border-r border-slate-200 flex flex-col">
           <div className="p-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{current.title}</p>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{section.title}</p>
           </div>
           <nav className="flex-1 overflow-auto p-2 space-y-1">
-            {current.children.map((c, ci) => (
-              <button key={c.key} onClick={() => select(current.pageIndex, ci)}
-                className={`w-full text-left px-3 py-2 rounded text-sm font-medium ${isSelected(current, ci) ? 'bg-blue-100 text-blue-900' : 'text-slate-600 hover:bg-slate-100'}`}>
-                {c.title}
-              </button>
-            ))}
+            {renderSubs(section.children, [section.pageIndex])}
           </nav>
         </aside>
       )}
@@ -157,10 +183,8 @@ export default function PreviewPage() {
         )}
         {savedMsg && <p className="px-6 text-green-700 text-sm">{savedMsg}</p>}
         <div className="px-6 py-4 border-t border-slate-200 flex items-center gap-3 sticky bottom-0 bg-white">
-          {activePanel && (
-            <button onClick={previousInSequence}
-              className="border border-slate-300 rounded px-3 py-1.5 text-sm">Previous Question</button>
-          )}
+          <button onClick={previousInSequence}
+            className="border border-slate-300 rounded px-3 py-1.5 text-sm">Previous Question</button>
           <button onClick={saveResponse} className="border border-slate-300 rounded px-3 py-1.5 text-sm">Save Progress</button>
           <button onClick={nextInSequence} className="border border-slate-300 rounded px-3 py-1.5 text-sm">Next Question</button>
           <button onClick={proceedNextSection} className="text-white font-semibold px-4 py-2 rounded"
