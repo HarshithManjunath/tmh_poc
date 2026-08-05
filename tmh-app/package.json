@@ -25,6 +25,7 @@
     "react-router-dom": "^7.18.2",
     "survey-core": "^2.5.37",
     "survey-creator-core": "^2.5.37",
+    "survey-creator-react": "^2.5.37",
     "survey-react-ui": "^2.5.37"
   }
 }
