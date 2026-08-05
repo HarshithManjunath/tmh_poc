@@ -4,9 +4,11 @@ import HomeLayout from './shell/HomeLayout'
 import BuilderPage from './builder/BuilderPage'
 import PreviewPage from './preview/PreviewPage'
 import { useAuth } from './auth/auth-context'
+import { ensureSeedData } from './forms/seed'
 
 export default function App() {
   const { user } = useAuth()
+  if (user) ensureSeedData()
   if (!user) return (<Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Navigate to="/login" replace />} /></Routes>)
   return (
     <Routes>
