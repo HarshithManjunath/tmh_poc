@@ -1,0 +1,55 @@
+export const NECK_FORM: object = {
+  pages: [
+    {
+      name: 'sectionA', title: 'A. Clinical Details',
+      elements: [{ type: 'text', name: 'a_age', title: 'Age' }, { type: 'text', name: 'a_sex', title: 'Sex' }],
+    },
+    {
+      name: 'sectionB', title: 'B. Technique',
+      elements: [{ type: 'text', name: 'b_technique', title: 'Technique' }],
+    },
+    {
+      name: 'sectionC', title: 'C. Comparison',
+      elements: [{ type: 'text', name: 'c_comparison', title: 'Comparison' }],
+    },
+    {
+      name: 'sectionD', title: 'D. Findings',
+      elements: [
+        {
+          type: 'panel',
+          name: 'd_primary',
+          title: '1. Primary Disease Extent',
+          elements: [{ type: 'text', name: 'd_extent', title: 'Extent' }],
+        },
+        {
+          type: 'panel',
+          name: 'd_tstage',
+          title: '2. T-Stage',
+          elements: [
+            { type: 'text', name: 'd_epiglottis', title: '2.1 Epiglottis' },
+            { type: 'text', name: 'd_preepiglottic', title: '2.2 Pre-epiglottic Space' },
+            { type: 'text', name: 'd_tumoutextent', title: '2.3 Tumour Extent' },
+          ],
+        },
+        {
+          type: 'panel',
+          name: 'd_nstage', title: '3. N-Stage',
+          elements: [{ type: 'text', name: 'd_nstage_val', title: 'N Stage' }],
+        },
+        {
+          type: 'panel',
+          name: 'd_mstage', title: '4. M-Stage',
+          elements: [{ type: 'text', name: 'd_mstage_val', title: 'M Stage' }],
+        },
+      ],
+    },
+    {
+      name: 'sectionE', title: 'E. Impression',
+      elements: [{ type: 'text', name: 'e_impression', title: 'Impression' }],
+    },
+    {
+      name: 'sectionF', title: 'F. Comments',
+      elements: [{ type: 'comment', name: 'f_comments', title: 'Comments' }],
+    },
+  ],
+}
