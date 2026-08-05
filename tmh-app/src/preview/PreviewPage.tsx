@@ -64,9 +64,6 @@ export default function PreviewPage() {
   const isNodeSelected = (path: number[]) =>
     path.length === selected.path.length && path.every((v, i) => v === selected.path[i])
 
-  const isPathAncestor = (path: number[]) =>
-    path.length < selected.path.length && path.every((v, i) => v === selected.path[i])
-
   const saveResponse = () => {
     if (!current) return
     const form = getLatestForm(cancerType)
@@ -127,14 +124,13 @@ export default function PreviewPage() {
   const renderSubs = (nodes: NavNode[] | undefined, prefix: number[]) => {
     return (nodes ?? []).map((c, ci) => {
       const path = [...prefix, ci]
-      const expanded = isNodeSelected(path) || isPathAncestor(path)
       return (
         <div key={c.key}>
           <button onClick={() => select(path)}
             className={`w-full text-left px-3 py-2 rounded text-sm ${isNodeSelected(path) ? 'bg-blue-100 text-blue-900 font-medium' : 'text-slate-600 hover:bg-slate-100'}`}>
             {c.title}
           </button>
-          {expanded && c.children && c.children.length > 0 && (
+          {c.children && c.children.length > 0 && (
             <div className="ml-3 space-y-1">{renderSubs(c.children, path)}</div>
           )}
         </div>
