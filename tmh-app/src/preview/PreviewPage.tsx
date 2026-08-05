@@ -64,7 +64,9 @@ export default function PreviewPage() {
   }
 
   const isSelected = (n: NavNode, childIdx?: number) =>
-    selected.path[0] === n.pageIndex && (childIdx == null ? selected.path.length === 1 : selected.path[1] === childIdx)
+    childIdx == null
+      ? selected.path[0] === n.pageIndex
+      : selected.path[0] === n.pageIndex && selected.path[1] === childIdx
 
   const saveResponse = () => {
     if (!current) return
