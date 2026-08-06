@@ -1,5 +1,6 @@
 ---
 name: pdf-to-surveyjs
+description: Use when a user supplies a PDF form template and requests a SurveyJS JSON definition.
 ---
 
 # PDF to SurveyJS
