@@ -1,7 +1,7 @@
 # PDF-to-SurveyJS Agent Design
 
 Date: 2026-08-06
-Status: Approved by user
+Status: Revised, pending user review
 
 ## Overview
 
@@ -10,9 +10,10 @@ into a SurveyJS JSON form definition. The skill will document the same careful e
 and modeling process used for the prostate reporting template, but will remain generic so
 it can process future clinical or non-clinical templates.
 
-The skill will return the generated JSON directly to the user. It will not save the JSON,
-seed it into the application, modify application source, or depend on a specific agent
-runtime.
+The skill will save the generated JSON as a named artifact under
+`tmh-app/src/forms/generatedForms/` and return the same JSON directly to the user. It will
+not seed the form into the application, register it in the form catalog, modify application
+source, or depend on a specific agent runtime.
 
 ## Decisions
 
@@ -25,28 +26,33 @@ runtime.
 - Ask focused clarification questions one at a time when the source is ambiguous.
 - Do not return JSON until unresolved ambiguities are clarified.
 - Return one raw, valid SurveyJS JSON object only, with no Markdown fence or explanation.
-- Do not save, seed, persist, calculate, integrate, or export the generated form.
+- Save each completed definition as `tmh-app/src/forms/generatedForms/<form-name>.json`,
+  using the form name as the filename with a `.json` extension.
+- Do not seed, register, calculate, integrate, or export the generated form.
 
 ## Workflow
 
 The skill will direct the agent to:
 
 1. Confirm that a PDF template was supplied and identify the source document.
-2. Inspect every page, including text, tables, checkboxes, radio controls, notes,
+2. Determine the form name from the PDF or ask the user to provide one if it is not clear
+   or contains characters that cannot be used in a filename.
+3. Inspect every page, including text, tables, checkboxes, radio controls, notes,
    repeated groups, and conditional cues.
-3. Build an internal inventory of sections, fields, labels, response controls, options,
+4. Build an internal inventory of sections, fields, labels, response controls, options,
    required indicators, repetition rules, and dependencies before writing JSON.
-4. Map the inventory to SurveyJS pages and question types conservatively.
-5. Use `text` for short free text or numeric-style entries when no specialized behavior is
+5. Map the inventory to SurveyJS pages and question types conservatively.
+6. Use `text` for short free text or numeric-style entries when no specialized behavior is
    explicit, `comment` for narrative responses, `date` for explicit date fields,
    `radiogroup` for single-choice controls, and `checkbox` for multi-select controls.
-6. Use `paneldynamic` only when the source clearly represents a repeatable group, and
+7. Use `paneldynamic` only when the source clearly represents a repeatable group, and
    preserve any source-supported minimum or maximum where determinable.
-7. Encode conditional visibility with `visibleIf` when the source visibly ties a field to
+8. Encode conditional visibility with `visibleIf` when the source visibly ties a field to
    a selection such as Present, Yes, or Other.
-8. Ask one focused question for any unresolved label, option, control type, requiredness,
+9. Ask one focused question for any unresolved label, option, control type, requiredness,
    dependency, or repetition rule. Resume extraction after the answer.
-9. Validate the completed object before returning it.
+10. Validate the completed object before returning it.
+11. Save the completed JSON using the resolved form name, then return the same raw object.
 
 ## SurveyJS Modeling Rules
 
@@ -79,8 +85,9 @@ while preserving the source-facing text.
 
 The final response must contain exactly one raw JSON object representing a SurveyJS form.
 It must be parseable as JSON and must not be wrapped in Markdown fences or preceded by
-prose. The agent will return the object only after the clarification protocol and quality
-checks are complete.
+prose. The agent will save the same object to
+`tmh-app/src/forms/generatedForms/<form-name>.json` before returning it, and will return the
+object only after the clarification protocol and quality checks are complete.
 
 ## Quality Checks
 
@@ -93,14 +100,14 @@ Before returning JSON, the agent will verify:
 - All source sections, fields, options, and explicit required indicators are represented.
 - Conditional fields reference existing question names and valid values.
 - Repeated groups are modeled only where supported by the source.
-- No unsupported calculations, integrations, persistence, seeding, or export behavior was
+- No unsupported calculations, integrations, seeding, registration, or export behavior was
   introduced.
+- The output filename matches the resolved form name and uses the `.json` extension.
 - The final structure and wording were reviewed against the complete PDF.
 
 ## Explicit Exclusions
 
-- Saving the JSON to the repository or filesystem.
-- Registering or seeding the form in `tmh-app`.
+- Seeding or registering the JSON in the application.
 - Changing the application builder, preview, repository, or persistence code.
 - Calling OpenCode-specific tools, APIs, plugins, or configuration.
 - Returning a partial JSON draft before clarification.
