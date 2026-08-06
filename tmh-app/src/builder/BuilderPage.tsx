@@ -2,17 +2,20 @@ import { useState } from 'react'
 import { CANCER_TYPES, DEFAULT_CANCER_TYPE } from '../forms/cancerTypes'
 import { saveForm, listForms, getLatestForm } from '../forms/formRepository'
 import { NECK_FORM } from '../forms/seedForms'
+import { PROSTATE_FORM } from '../forms/prostateForm'
 import SurveyCreatorWrapper from './SurveyCreatorWrapper'
+
+const seedFor = (type: string): object => type === 'Prostate' ? PROSTATE_FORM : NECK_FORM
 
 export default function BuilderPage() {
   const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE)
-  const [surveyJson, setSurveyJson] = useState<object>(getLatestForm(DEFAULT_CANCER_TYPE)?.surveyJson ?? NECK_FORM)
+  const [surveyJson, setSurveyJson] = useState<object>(() => getLatestForm(DEFAULT_CANCER_TYPE)?.surveyJson ?? seedFor(DEFAULT_CANCER_TYPE))
   const [savedMsg, setSavedMsg] = useState('')
   const versions = listForms(cancerType)
 
   const selectType = (ct: string) => {
     setCancerType(ct)
-    setSurveyJson(getLatestForm(ct)?.surveyJson ?? NECK_FORM)
+    setSurveyJson(getLatestForm(ct)?.surveyJson ?? seedFor(ct))
     setSavedMsg('')
   }
 
