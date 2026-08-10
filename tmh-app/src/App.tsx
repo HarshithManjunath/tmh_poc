@@ -3,6 +3,7 @@ import LoginPage from './auth/LoginPage'
 import HomeLayout from './shell/HomeLayout'
 import BuilderPage from './builder/BuilderPage'
 import PreviewPage from './preview/PreviewPage'
+import WorklistPage from './worklist/WorklistPage'
 import { useAuth } from './auth/auth-context'
 import { ensureSeedData } from './forms/seed'
 
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/builder" replace />} />
         <Route path="/builder" element={<BuilderPage />} />
         <Route path="/preview" element={<PreviewPage />} />
+        <Route path="/worklist" element={<WorklistPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -1,15 +1,22 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
 import 'survey-core/survey-core.css'
 import { CANCER_TYPES, DEFAULT_CANCER_TYPE } from '../forms/cancerTypes'
 import { getLatestForm } from '../forms/formRepository'
+import { getCases } from '../cases/seed'
+import PatientContext from '../components/PatientContext'
 import { buildNavTree, nodeAtPath } from './navTree'
 import type { NavNode } from './navTree'
 import { writeJSON } from '../lib/storage/storage'
 
 export default function PreviewPage() {
-  const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE)
+  const [searchParams] = useSearchParams()
+  const [cancerType, setCancerType] = useState(() => {
+    const t = searchParams.get('type')
+    return t && CANCER_TYPES.includes(t) ? t : DEFAULT_CANCER_TYPE
+  })
   const [nav, setNav] = useState<NavNode[]>(() => {
     const f = getLatestForm(cancerType)
     return f ? buildNavTree((f.surveyJson as any).pages ?? []) : []
@@ -18,6 +25,21 @@ export default function PreviewPage() {
   const dataRef = useRef<Record<string, any>>({})
   const [data, setData] = useState<Record<string, any>>({})
   const [savedMsg, setSavedMsg] = useState('')
+
+  const typeFromUrl = searchParams.get('type')
+  const caseData = useMemo(() => getCases().find(c => c.id === searchParams.get('caseId')) ?? null, [searchParams])
+  useEffect(() => {
+    if (typeFromUrl && CANCER_TYPES.includes(typeFromUrl) && typeFromUrl !== cancerType) {
+      setCancerType(typeFromUrl)
+      const f = getLatestForm(typeFromUrl)
+      setNav(f ? buildNavTree((f.surveyJson as any).pages ?? []) : [])
+      setSelected({ path: [0] })
+      dataRef.current = {}
+      setData({})
+      setSavedMsg('')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typeFromUrl])
 
   const section = useMemo(() => nav[selected.path[0]] ?? null, [nav, selected])
   const current = useMemo(() => nodeAtPath(nav, selected.path), [nav, selected])
@@ -187,6 +209,7 @@ export default function PreviewPage() {
             style={{ backgroundColor: 'var(--brand-hex)' }}>Proceed to next section</button>
         </div>
       </main>
+      {caseData && <PatientContext caseData={caseData} />}
     </div>
   )
 }
