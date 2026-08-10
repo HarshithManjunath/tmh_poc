@@ -195,16 +195,6 @@ export default function WorklistPage() {
             {filtered.length} {filtered.length === 1 ? 'case' : 'cases'}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50:bg-slate-700">
-            <Icon name="printer" className="h-4 w-4" />
-            Export
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50:bg-slate-700">
-            <Icon name="download" className="h-4 w-4" />
-            Download
-          </button>
-        </div>
       </div>
 
       {/* Category filter pills */}

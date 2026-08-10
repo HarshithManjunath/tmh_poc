@@ -195,7 +195,9 @@ export default function PreviewPage() {
           <h1 className="text-2xl font-bold text-slate-800">Preview Form</h1>
         </div>
         {surveyModel ? (
-          <Survey model={surveyModel} />
+          <div className="compact-survey">
+            <Survey model={surveyModel} />
+          </div>
         ) : (
           <div className="p-6 text-slate-500">Select a cancer type and form version.</div>
         )}

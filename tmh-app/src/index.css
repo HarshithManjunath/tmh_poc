@@ -32,3 +32,9 @@ html, body, #root {
 .builder-creator .svc-creator-tabbed-menu-item:hover {
   color: var(--brand-hex);
 }
+
+/* Compact SurveyJS render (reduce input/widget scale) */
+.compact-survey {
+  --sjs-font-size: 12px;
+  --sjs-base-unit: 6px;
+}
