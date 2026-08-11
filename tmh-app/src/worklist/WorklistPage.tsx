@@ -57,6 +57,9 @@ function weasisLink(path: string): string {
   const command = `$dicom:get -l "${path.replace(/\\/g, '/')}"`
   return 'weasis://?' + encodeURIComponent(command)
 }
+function qpathLink(path: string): string {
+  return 'qpath://' + encodeURIComponent(path.replace(/\\/g, '/'))
+}
 
 const DEPTS = ['All Departments', 'Radiology', 'Pathology'] as const
 const STATUSES = ['All Status', 'Pending', 'In Progress', 'In Review', 'Completed'] as const
@@ -405,7 +408,15 @@ function RowGroup({
         )}
       </td>
       <td className="px-3 py-3">
-        {c.scanUrl ? (
+        {c.slideUrl ? (
+          <a
+            href={qpathLink(c.slideUrl)}
+            title="Open in QuPath"
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            View Scan
+          </a>
+        ) : c.scanUrl ? (
           <a
             href={weasisLink(c.scanUrl)}
             title="Open in Weasis"
