@@ -53,6 +53,10 @@ function priorityTone(p: Priority): BadgeTone {
 function statusTone(s: Status): BadgeTone {
   return s === 'Pending' ? 'slate' : s === 'In Progress' ? 'blue' : s === 'In Review' ? 'amber' : 'green'
 }
+function weasisLink(path: string): string {
+  const command = `$dicom:get -l "${path.replace(/\\/g, '/')}"`
+  return 'weasis://?' + encodeURIComponent(command)
+}
 
 const DEPTS = ['All Departments', 'Radiology', 'Pathology'] as const
 const STATUSES = ['All Status', 'Pending', 'In Progress', 'In Review', 'Completed'] as const
@@ -295,6 +299,7 @@ export default function WorklistPage() {
                 <th className="px-3 py-3 font-medium">TAT %</th>
                 <th className="px-3 py-3 font-medium">AI</th>
                 <th className="px-3 py-3 font-medium">Critical</th>
+                <th className="px-3 py-3 font-medium">View Scan</th>
                 <th className="w-10 px-3 py-3" />
               </tr>
             </thead>
@@ -400,6 +405,19 @@ function RowGroup({
         )}
       </td>
       <td className="px-3 py-3">
+        {c.scanUrl ? (
+          <a
+            href={weasisLink(c.scanUrl)}
+            title="Open in Weasis"
+            className="text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            View Scan
+          </a>
+        ) : (
+          <span className="text-slate-300">—</span>
+        )}
+      </td>
+      <td className="px-3 py-3">
         <button
           onClick={onExpand}
           title="Details"
@@ -417,7 +435,7 @@ function RowGroup({
       {expanded && (
         <tr className="bg-slate-50">
           <td />
-          <td colSpan={9} className="px-4 py-4">
+          <td colSpan={10} className="px-4 py-4">
             <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm md:grid-cols-4">
               <Detail label="MRN" value={c.mrn} />
               <Detail label="Requisition" value={c.requisitionNo} />
