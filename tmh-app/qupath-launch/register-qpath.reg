@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\qpath]
+@="URL:QuPath Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\qpath\shell\open\command]
+@="\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -NoProfile -File \"D:\\Work\\TMH-POC\\tmh-app\\qupath-launch\\qpath-launcher.ps1\" \"%1\""
