@@ -27,4 +27,5 @@ export interface Case {
   isEmergency: boolean
   isCritical: boolean
   aiFindingCount: number | null
+  scanUrl?: string
 }
