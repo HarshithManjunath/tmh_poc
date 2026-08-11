@@ -1,0 +1,36 @@
+$primary-blue: #1e3a8a;
+$white: #ffffff;
+$grey-2: #e2e8f0;
+
+.compact-survey {
+  .sd-root-modern {
+    background-color: #ffffff !important;
+  }
+
+  .sv-components-column {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    max-width: 100% !important;
+  }
+
+  .sd-page {
+    padding: 0px !important;
+  }
+
+  .sd-element--with-frame {
+    box-shadow: none !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  .sd-input:active {
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 2px $primary-blue;
+  }
+
+  .sd-input:focus {
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 2px $primary-blue;
+  }
+}

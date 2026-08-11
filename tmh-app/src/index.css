@@ -6,7 +6,9 @@
   --brand-hex: #1e3a8a;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -31,10 +33,4 @@ html, body, #root {
 .builder-creator .svc-creator-tabbed-menu-item--selected svg,
 .builder-creator .svc-creator-tabbed-menu-item:hover {
   color: var(--brand-hex);
-}
-
-/* Compact SurveyJS render (reduce input/widget scale) */
-.compact-survey {
-  --sjs-font-size: 12px;
-  --sjs-base-unit: 6px;
 }
