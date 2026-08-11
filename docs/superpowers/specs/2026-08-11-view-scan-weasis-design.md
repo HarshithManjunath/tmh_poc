@@ -13,7 +13,7 @@ Weasis desktop viewer. Pathology records show a dash.
 - Worklist table lives in `tmh-app/src/worklist/WorklistPage.tsx` (header + row cells, plus an expandable detail row spanning all columns).
 - Mock cases come from `tmh-app/src/cases/seed.ts`; the `Case` shape is defined in `tmh-app/src/cases/types.ts`.
 - The sample DICOM file is confirmed at `C:\Users\THOUGHTCLAN\Downloads\000001.dcm`.
-- Weasis registers a custom browser protocol handler (`dicom:`) when installed, so local files are opened via `dicom:get -r file:/<path>` links.
+- Weasis (installed at `C:\Program Files\Weasis`, v3.6+) registers the custom browser protocol handler `weasis://?<url-encoded-command>`. Per the official docs, local files are opened with `$dicom:get -l "<path>"` (the `-l` flag accepts a single file path).
 
 ## Design
 
@@ -27,7 +27,7 @@ scanUrl?: string
 
 It stores the raw file path to the DICOM scan, e.g.
 `C:\Users\THOUGHTCLAN\Downloads\000001.dcm`. The mock data stores the path
-(backslash-separated Windows path, not a URL); the component builds the `dicom:` link.
+(backslash-separated Windows path, not a URL); the component builds the `weasis:` link.
 
 ### 2. Mock data — `tmh-app/src/cases/seed.ts`
 
@@ -43,10 +43,16 @@ Pathology cases (c3, c4, c7, c8) get no `scanUrl`.
 
 - Add a `View Scan` header cell between `Critical` and the expand-chevron column.
 - In the row cell:
-  - When `c.scanUrl` exists: render
-    `<a href={"dicom:get -r file:" + c.scanUrl.replace(/\\/g, "/")} title="Open in Weasis">View Scan</a>`.
-    The backslash-to-forward-slash conversion produces a valid
-    `file:/C:/Users/THOUGHTCLAN/Downloads/000001.dcm` resource.
+  - When `c.scanUrl` exists: build the Weasis protocol link and render
+    `<a href={link} title="Open in Weasis">View Scan</a>`, where `link` is
+    computed as:
+    ```ts
+    const command = `$dicom:get -l "${c.scanUrl.replace(/\\/g, '/')}"`
+    const link = 'weasis://?' + encodeURIComponent(command)
+    ```
+    The backslash-to-forward-slash conversion yields a valid Windows path for
+    the `-l` argument, and `encodeURIComponent` produces
+    `weasis://?%24dicom%3Aget%20-l%20%22C%3A%2FUsers%2FTHOUGHTCLAN%2FDownloads%2F000001.dcm%22`.
   - Otherwise: render an em-dash (`—`) muted in the slate palette.
 - The expanded detail row currently spans `colSpan={9}` after an empty first cell
   (10 columns total). Adding one column makes it 11, so bump `colSpan` to `10`.
