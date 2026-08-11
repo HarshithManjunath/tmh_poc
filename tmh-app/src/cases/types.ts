@@ -28,4 +28,5 @@ export interface Case {
   isCritical: boolean
   aiFindingCount: number | null
   scanUrl?: string
+  slideUrl?: string
 }

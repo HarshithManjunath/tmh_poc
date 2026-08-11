@@ -77,6 +77,7 @@ clinicalHistory: 'Two-week history of worsening headaches with focal neurology; 
     isEmergency: true,
     isCritical: false,
     aiFindingCount: null,
+    slideUrl: 'C:\\Users\\THOUGHTCLAN\\Downloads\\000001.svs',
   },
   {
     id: 'c4',
@@ -102,6 +103,7 @@ clinicalHistory: 'Two-week history of worsening headaches with focal neurology; 
     isEmergency: false,
     isCritical: false,
     aiFindingCount: 1,
+    slideUrl: 'C:\\Users\\THOUGHTCLAN\\Downloads\\000001.svs',
   },
   {
     id: 'c5',
@@ -179,6 +181,7 @@ clinicalHistory: 'Two-week history of worsening headaches with focal neurology; 
     isEmergency: false,
     isCritical: false,
     aiFindingCount: 4,
+    slideUrl: 'C:\\Users\\THOUGHTCLAN\\Downloads\\000001.svs',
   },
   {
     id: 'c8',
@@ -204,6 +207,7 @@ clinicalHistory: 'Two-week history of worsening headaches with focal neurology; 
     isEmergency: false,
     isCritical: false,
     aiFindingCount: null,
+    slideUrl: 'C:\\Users\\THOUGHTCLAN\\Downloads\\000001.svs',
   },
 ]
 
