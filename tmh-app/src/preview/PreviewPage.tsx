@@ -204,16 +204,18 @@ export default function PreviewPage() {
           </nav>
         </aside>
       )}
-      <main className="flex-1 overflow-auto bg-white relative">
-        {surveyModel ? (
-          <div className="compact-survey">
-            <Survey model={surveyModel} />
-          </div>
-        ) : (
-          <div className="p-6 text-slate-500">No form available.</div>
-        )}
-        {savedMsg && <p className="px-6 text-green-700 text-sm">{savedMsg}</p>}
-        <div className="px-6 py-4 border-t border-slate-200 flex items-center gap-3 sticky bottom-0 bg-white">
+      <main className="flex-1 flex flex-col bg-white relative min-h-0">
+        <div className="flex-1 overflow-auto relative">
+          {surveyModel ? (
+            <div className="compact-survey">
+              <Survey model={surveyModel} />
+            </div>
+          ) : (
+            <div className="p-6 text-slate-500">No form available.</div>
+          )}
+          {savedMsg && <p className="px-6 text-green-700 text-sm">{savedMsg}</p>}
+        </div>
+        <div className="px-6 py-4 border-t border-slate-200 flex items-center gap-3 shrink-0 bg-white">
           <button
             onClick={previousInSequence}
             className="border border-slate-300 rounded px-3 py-1.5 text-sm"

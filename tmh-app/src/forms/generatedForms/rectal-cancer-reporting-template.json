@@ -1,0 +1,119 @@
+{
+  "title": "Rectal Cancer Reporting Template",
+  "pages": [
+    {
+      "name": "caseInformation",
+      "title": "Case Information",
+      "elements": [
+        { "type": "text", "name": "caseNumber", "title": "Case Number" },
+        { "type": "text", "name": "patientName", "title": "Name", "description": "Auto populate as per case no" },
+        { "type": "text", "name": "ageSex", "title": "Age/Sex", "description": "Auto populate as per case no" },
+        { "type": "text", "name": "doctorName", "title": "Name of the doctor" }
+      ]
+    },
+    {
+      "name": "biopsy",
+      "title": "1. Biopsy",
+      "elements": [
+        { "type": "radiogroup", "name": "hpe", "title": "HPE", "choices": ["Adenocarcinoma", "Squamous cell carcinoma", "Neuroendocrine carcinoma", "Lymphoma", "GIST", "Others, Pls Specify___"] },
+        { "type": "radiogroup", "name": "differentiationGrade", "title": "Differentiation / Grade", "choices": ["Well", "Moderate", "Poor"] },
+        { "type": "radiogroup", "name": "signetRingCells", "title": "Signet Ring Cells", "choices": ["Yes", "No"] },
+        { "type": "radiogroup", "name": "mucin", "title": "Mucin", "choices": ["Yes", "No"] },
+        { "type": "text", "name": "cea", "title": "CEA" },
+        { "type": "checkbox", "name": "colonoscopyLocationAndDiagnosis", "title": "Colonoscopy location and diagnosis", "choices": ["Low Rectum", "Mid Rectum", "High Rectum", "Sigmoid Colon", "Others, Pls Specify_____"] , "description": "Multiple choice possible"},
+        { "type": "radiogroup", "name": "clinicalExamLocation", "title": "Clinical Exam Location", "choices": ["Low Rectum", "Mid Rectum", "High Rectum", "Sigmoid Colon", "Others, Pls Specify_____"] }
+      ]
+    },
+    {
+      "name": "comparison",
+      "title": "2. Comparison- For Restaging MRI",
+      "elements": [
+        { "type": "date", "name": "dateOfDocument", "title": "Date of Document", "description": "Enable date picker" }
+      ]
+    },
+    {
+      "name": "modality",
+      "title": "3. Modality",
+      "elements": [
+        { "type": "radiogroup", "name": "localStaging", "title": "Local Staging", "choices": ["CT", "MRI", "PET CT"] },
+        { "type": "radiogroup", "name": "metastaticWorkup", "title": "Metastatic Workup", "choices": ["CT Thorax abdomen Pelvis", "CT Abdomen and Pelvis", "MRI", "PET CT"] },
+        { "type": "radiogroup", "name": "qualityOfMriImages", "title": "Quality of MRI Images", "choices": ["1- Worst", "2", "3", "4", "5", "6", "7", "8", "9", "10- Best"] }
+      ]
+    },
+    {
+      "name": "findings",
+      "title": "4. Findings",
+      "elements": [
+        { "type": "radiogroup", "name": "numberOfLesions", "title": "Number of lesions", "choices": ["1", "2", "Multiple lesions"] },
+        { "type": "text", "name": "multipleLesionsCount", "title": "If multiple, Specify number of lesions" },
+        { "type": "radiogroup", "name": "locationOfTumour", "title": "Location of Tumour", "choices": ["Anal Canal", "Low rectum", "Mid rectum", "High rectum", "Sigmoid colon"] }
+      ]
+    },
+    {
+      "name": "rectalAndAnalMri",
+      "title": "5. For Rectal and Anal MRI",
+      "elements": [
+        { "type": "radiogroup", "name": "t2SignalIntensity", "title": "T2 Signal Intensity", "choices": ["Intermediate", "Hyperintense", "Mixed Signal", "Hypointense"] },
+        { "type": "radiogroup", "name": "dwi", "title": "DWI", "choices": ["Facilitated Diffusion", "Restricted Diffusion"] },
+        { "type": "radiogroup", "name": "tumourLocationByAnalVerge", "title": "Location (based on distance from anal verge)", "choices": ["High", "Mid", "Low"] },
+        { "type": "radiogroup", "name": "radialExtent", "title": "Radial extent", "choices": ["Annular", "Semi-Annular"] },
+        { "type": "radiogroup", "name": "morphology", "title": "Morphology", "choices": ["Polypoidal", "Infiltrating", "Ulcerative"] },
+        { "type": "radiogroup", "name": "perforation", "title": "Perforation", "choices": ["Yes", "No"] },
+        { "type": "radiogroup", "name": "obstruction", "title": "Obstruction", "choices": ["Yes", "No"] },
+        { "type": "radiogroup", "name": "tumourBorderConfiguration", "title": "Tumour Border Configuration", "choices": ["Pushing", "Infiltrating"] },
+        { "type": "text", "name": "lengthCm", "title": "Length (cm)" },
+        { "type": "text", "name": "distalMarginToAnalVergeCm", "title": "Distance between distal margin of tumour to anal verge (cm)" },
+        { "type": "text", "name": "distalMarginToAnorectalJunctionCm", "title": "Distance between distal margin of tumour to ano-rectal junction (cm)" },
+        { "type": "text", "name": "extramuralSpreadMm", "title": "Extramural spread (mm)" },
+        { "type": "text", "name": "mrfToInvadingTumourMarginMm", "title": "Distance between MRF to invading tumour margin In Numeric (mm)" },
+        { "type": "radiogroup", "name": "mrfInvolvement", "title": "MRF", "choices": ["Involved", "Not Involved"] },
+        { "type": "radiogroup", "name": "peritonealReflectionInvolvement", "title": "Peritoneal Reflection", "choices": ["Involved", "Not Involved"] },
+        { "type": "radiogroup", "name": "puborectalisLevatorAniInvolvement", "title": "Puborectalis / levator ani", "choices": ["Involved", "Not Involved"] },
+        { "type": "radiogroup", "name": "emvi", "title": "EMVI", "choices": ["Absent", "Present"] },
+        { "type": "radiogroup", "name": "tumourDeposits", "title": "Tumour Deposits", "choices": ["Absent", "Present"] },
+        { "type": "radiogroup", "name": "marginOfError", "title": "Margin of Error", "choices": ["Below Peritoneal Reflection", "At the peritoneal function", "Above Peritoneal function"], "description": "Choose one. Highest Margin of Tumour; Lowest Margin of Tumour" },
+        { "type": "radiogroup", "name": "analSphincterComplex", "title": "Anal sphincter complex", "choices": ["Internal sphincter infiltration", "external sphincter infiltration", "Internal sphincteric space infiltration", "No infiltration"] },
+        { "type": "radiogroup", "name": "adjacentOrgans", "title": "Adjacent organs", "choices": ["Prostrate", "Seminal vesicles", "Uterus", "Vagina", "Cervix"] },
+        { "type": "radiogroup", "name": "otherStructureInfiltration", "title": "Others structure infiltration", "choices": ["Muscles like piriformis", "Extra mesorectal fat", "Sacrum above S3", "Obturator internus", "Pelvic side well", "Sacrum below S3", "Obturator externus", "Presacral fascia", "Others, specify___________"] }
+      ]
+    },
+    {
+      "name": "lymphNodes",
+      "title": "6. Lymph Nodes",
+      "elements": [
+        { "type": "panel", "name": "mesorectalNodes", "title": "Mesorectal Nodes", "elements": [ { "type": "radiogroup", "name": "mesorectalNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "mesorectalNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "mesorectalNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "internalIliacNodes", "title": "Internal Iliac Nodes", "elements": [ { "type": "radiogroup", "name": "internalIliacNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "internalIliacNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "internalIliacNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "obturatorNodes", "title": "Obturator Nodes", "elements": [ { "type": "radiogroup", "name": "obturatorNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "obturatorNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "obturatorNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "externalIliacNodes", "title": "External Iliac Nodes", "elements": [ { "type": "radiogroup", "name": "externalIliacNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "externalIliacNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "externalIliacNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "commonIliacNodes", "title": "Common Iliac Nodes", "elements": [ { "type": "radiogroup", "name": "commonIliacNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "commonIliacNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "commonIliacNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "inguinalNodes", "title": "Inguinal", "elements": [ { "type": "radiogroup", "name": "inguinalNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "inguinalNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "inguinalNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "paraAorticNodes", "title": "Para-aortic", "elements": [ { "type": "radiogroup", "name": "paraAorticNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "paraAorticNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "paraAorticNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "panel", "name": "upperAbdominalNodes", "title": "Upper abdominal nodes", "elements": [ { "type": "radiogroup", "name": "upperAbdominalNodesSignificance", "title": "Significance", "choices": ["Significant", "Insignificant"] }, { "type": "text", "name": "upperAbdominalNodesNumber", "title": "If Significant, Mention number of nodes" }, { "type": "radiogroup", "name": "upperAbdominalNodesLaterality", "title": "Laterality", "choices": ["Right", "Left", "Bilateral", "NA"] } ] },
+        { "type": "radiogroup", "name": "restOfBowelObstruction", "title": "Rest of bowel - Obstruction", "choices": ["Present", "Absent"], "description": "Tick if present" },
+        { "type": "radiogroup", "name": "synchronousColonCancer", "title": "Rest of bowel - Synchronous colon cancer", "choices": ["Present", "Absent"], "description": "Tick if present" }
+      ]
+    },
+    {
+      "name": "metastases",
+      "title": "7. Metastases",
+      "elements": [
+        { "type": "radiogroup", "name": "metastaticSpread", "title": "Spread", "choices": ["Liver", "Lungs", "Peritoneum", "Metastatic modes", "Bones", "Others, specify___________"] },
+        { "type": "comment", "name": "additionalFindings", "title": "If additional findings are present, Please Specify" }
+      ]
+    },
+    {
+      "name": "impression",
+      "title": "8. Impression",
+      "elements": [
+        { "type": "radiogroup", "name": "impressionTumourLocation", "title": "Location of tumour", "choices": ["Anal Canal", "Low rectum", "Mid rectum", "High rectum", "Sigmoid colon"] },
+        { "type": "radiogroup", "name": "crm", "title": "CRM", "choices": ["Involved", "Not Involved"] },
+        { "type": "radiogroup", "name": "impressionEmvi", "title": "EMVI", "choices": ["Absent", "Present"] },
+        { "type": "radiogroup", "name": "impressionTd", "title": "TD", "choices": ["Absent", "Present"] },
+        { "type": "radiogroup", "name": "pelvicSideWallNodesNodules", "title": "Pelvic Side Wall Nodes/Nodules", "choices": ["Absent", "Present"] },
+        { "type": "radiogroup", "name": "tStage", "title": "T Stage", "choices": ["T0", "T1", "T2", "T3a", "T3b", "T3c", "T3d", "T4a", "T4b"] },
+        { "type": "radiogroup", "name": "nStage", "title": "N Stage", "choices": ["N0", "N1", "N1c", "N2"] },
+        { "type": "radiogroup", "name": "mStage", "title": "M Stage", "choices": ["M0", "M1a", "M1b", "M1c"] }
+      ]
+    }
+  ]
+}

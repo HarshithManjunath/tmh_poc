@@ -1,0 +1,153 @@
+// App theme hex codes (see :root --brand-hex in src/index.css)
+$primary-blue: #1e3a8a;
+$white: #ffffff;
+$grey-2: #e2e8f0;
+
+.builder-creator {
+  margin: 0px -15px;
+  .forms-header {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0.5rem 1rem;
+    box-shadow:
+      0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    // z-index: 1;
+    // position: sticky;
+    // top: 0;
+    background-color: $white;
+    border-bottom: 2px solid $grey-2;
+
+    .ant-input:hover {
+      border-color: $primary-blue;
+    }
+    .ant-input:focus,
+    .ant-input-focused {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 2px $primary-blue;
+    }
+
+    .template-name {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .text-primary {
+    color: $primary-blue !important;
+  }
+
+  .svc-creator {
+    height: 100% !important;
+  }
+
+  .sd-title.sd-container-modern__title {
+    display: none;
+  }
+}
+.svc-creator__banner {
+  display: none !important;
+}
+
+.svc-tabbed-menu-item--selected,
+.svc-tabbed-menu-item--selected:hover,
+.svc-tabbed-menu-item--selected:focus {
+  box-shadow: inset 0px -2px 0px $primary-blue;
+}
+.svc-btn .svc-text {
+  color: $primary-blue;
+}
+.sd-input:focus {
+  color: $primary-blue;
+  box-shadow: 0, 0, 3px, $primary-blue;
+}
+.sd-input:focus {
+  box-shadow:
+    var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)),
+    0 0 0 2px $primary-blue;
+}
+.svc-btn:focus {
+  box-shadow: 0 0 0 2px var(--ctr-button-border-color-focused, $primary-blue);
+}
+.sd-btn--action {
+  &:hover {
+    color: var(--sjs-primary-forecolor, var(--primary-foreground, #fff));
+    background-color: var(
+      --sjs-primary-backcolor,
+      var(--primary, $primary-blue)
+    );
+  }
+}
+.sd-btn {
+  color: $primary-blue;
+  box-shadow:
+    var(--sjs-shadow-small, 0px 1px 2px 0px rgba(0, 0, 0, 0.15)),
+    0 0 0 0px $primary-blue;
+}
+.sd-btn--action {
+  background-color: var(--sjs-primary-backcolor, var(--primary, $primary-blue));
+  color: var(--sjs-primary-forecolor, var(--primary-foreground, #fff));
+}
+.svc-action-button--selected {
+  border-color: var(
+    --ctr-survey-action-button-text-color-positive,
+    var(--sjs-primary-backcolor, var(--primary, $primary-blue))
+  );
+  color: $primary-blue;
+}
+.svc-action-button {
+  color: $primary-blue;
+}
+.svc-string-editor__border.svc-string-editor__border--focus {
+  box-shadow:
+    0px 2px 6px 0px var(--ctr-shadow-medium-color, rgba(0, 0, 0, 0.1)),
+    0px 0px 0px calc(0.25 * (var(--sjs-base-unit, var(--base-unit, 8px))))
+      var(--sjs-primary-backcolor, var(--primary, $primary-blue));
+}
+.svc-question__adorner
+  .sv-action-bar-item--secondary
+  .sv-action-bar-item__icon
+  use {
+  fill: $primary-blue;
+}
+.svc-page__content--selected.svc-page__content--selected {
+  box-shadow: 0 0 0 2px
+    var(--sjs-secondary-backcolor, var(--secondary, $primary-blue));
+  background: #f8fafc;
+}
+.svc-question__content--selected:not(.svc-question__content--dragged) {
+  box-shadow: 0 0 0 2px $primary-blue;
+}
+.svc-toolbox__item-banner .sv-svg-icon use {
+  fill: var(
+    --ctr-toolbox-item-icon-color-hovered,
+    var(--sjs-primary-backcolor, var(--primary, $primary-blue))
+  );
+}
+.svc-toolbox__tool .sv-dots__item:hover:enabled .sv-svg-icon use,
+.svc-toolbox__tool .sv-dots__item:focus:enabled .sv-svg-icon use,
+.svc-toolbox__tool .sv-dots__item.sv-action-bar-item--pressed .sv-svg-icon use {
+  fill: $primary-blue;
+}
+.svc-toolbox__tool .sv-dots__item:hover:enabled,
+.svc-toolbox__tool .sv-dots__item:focus:enabled,
+.svc-toolbox__tool .sv-dots__item.sv-action-bar-item--pressed {
+  background-color: #f1f5f9;
+}
+@media (max-width: 768px) {
+  .survey-creator-react-container .forms-header {
+    height: auto;
+    .custom-flex {
+      display: flex;
+      align-items: flex-start !important;
+      flex-direction: column;
+      gap: 5px;
+      margin: 10px;
+    }
+  }
+}
