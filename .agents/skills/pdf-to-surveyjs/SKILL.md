@@ -27,7 +27,7 @@ does not define.
    where useful. Do not silently guess, return a partial draft, or continue past an
    unresolved control type, option, requiredness, dependency, or repetition rule.
 7. Validate the completed object, save it, compare it with the complete PDF one final time,
-   and only then return the object.
+   and only then integrate it into the application and return the object.
 
 ## Mapping Rules
 
@@ -61,6 +61,36 @@ the source value exactly.
 - Do not invent calculations, defaults, validation, auto-population, patient lookup,
   integrations, or other behavior absent from the source.
 
+## Application Integration
+
+After the generated JSON has passed the complete PDF comparison and has been saved, integrate
+it in this exact order:
+
+1. Resolve `formName` for the filename and `cancerType` for the application. Use the generated
+   filename under `tmh-app/src/forms/generatedForms/<form-name>.json` as `formName`. Default
+   `cancerType` to `formName`; ask one focused question only when the desired dropdown label
+   should differ. Use the resolved `cancerType` consistently as the catalog entry, seed key,
+   Builder fallback key, and `Case.diseaseType`.
+2. Generate and validate the SurveyJS JSON, then save it to
+   `tmh-app/src/forms/generatedForms/<form-name>.json` before changing application files.
+3. Inspect `tmh-app/src/forms/cancerTypes.ts` and add `cancerType` exactly once to its catalog,
+   preserving the existing order unless the user specifies placement. Do not alter unrelated
+   entries.
+4. Import the generated JSON from its `generatedForms` path in `tmh-app/src/forms/seed.ts`.
+   Seed it idempotently: when `listForms(cancerType)` is empty, call
+   `saveForm(cancerType, generatedForm)`; otherwise leave the saved versions unchanged. If the
+   build rejects JSON imports, make the smallest compatible configuration adjustment, such as
+   enabling JSON module resolution in `tmh-app/tsconfig.app.json`.
+5. Inspect `tmh-app/src/builder/BuilderPage.tsx`. If it has an explicit `seedFor` mapping, add
+   the generated form under `cancerType` so `getLatestForm(cancerType)?.surveyJson ??
+   seedFor(cancerType)` cannot silently fall back to the Neck form. Preserve saved-form lookup.
+6. Inspect `tmh-app/src/cases/seed.ts` and `tmh-app/src/cases/types.ts`. Add exactly one fictional,
+   deterministic case only when no existing case uses `cancerType`. It must satisfy every
+   `Case` property, use `diseaseType: cancerType`, avoid real PDF patient details, and avoid
+   duplicate cases on reruns.
+7. Validate the integration, perform a consistency review, and return the generated object as
+   raw JSON only. Do not add runtime directory scanning or a generated registry abstraction.
+
 ## Validation Before Return
 
 Check all of the following against the complete PDF:
@@ -75,17 +105,27 @@ Check all of the following against the complete PDF:
 - Every `paneldynamic` corresponds to a source-supported repeatable group and preserves
   determinable count limits.
 - The output filename matches the resolved form name and uses the `.json` extension.
-- No seeding, registration, application-source edits, calculation, integration, PDF export,
-  or runtime dependency was introduced.
+- The cancer type appears exactly once in the catalog.
+- The generated JSON import path is correct and its seed is guarded by an empty-list check using
+  `listForms(cancerType)` before `saveForm(cancerType, generatedForm)`.
+- The Builder fallback maps `cancerType` to the generated form when an explicit `seedFor` mapping
+  exists.
+- The mock case conforms to every `Case` property, uses `diseaseType: cancerType`, and is not a
+  duplicate.
+- The form filename, catalog label, seed key, Builder key, and mock-case disease type match.
+- No patient lookup, auto-population, calculation, integration beyond this static registration
+  and seeding workflow, PDF export, runtime directory scanning, or generated registry abstraction
+  was introduced.
 - The final structure and wording match the PDF after a last page-by-page comparison.
 
 ## Save and Return
 
 Create `tmh-app/src/forms/generatedForms/` if it does not exist. Save the completed object as
 `tmh-app/src/forms/generatedForms/<form-name>.json`, using the resolved form name and a `.json`
-extension. Return exactly the same object as raw JSON only: no Markdown fence, prose, status
-message, or additional object. If clarification is needed, return the single focused question
-instead of JSON and resume only after the user answers.
+extension. After completing the application integration and consistency review, return exactly
+the same object as raw JSON only: no Markdown fence, prose, status message, or additional object.
+If clarification is needed, return the single focused question instead of JSON and resume only
+after the user answers.
 
 ## Red Flags
 
