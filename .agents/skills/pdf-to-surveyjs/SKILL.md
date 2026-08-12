@@ -63,24 +63,28 @@ the source value exactly.
 
 ## Application Integration
 
-After the generated JSON has passed the complete PDF comparison and has been saved, integrate
-it in this exact order:
+After the generated JSON has passed the complete PDF comparison, integrate it in this exact order.
+The generation and save occur in step 2 before any application source is edited:
 
 1. Resolve `formName` for the filename and `cancerType` for the application. Use the generated
-   filename under `tmh-app/src/forms/generatedForms/<form-name>.json` as `formName`. Default
-   `cancerType` to `formName`; ask one focused question only when the desired dropdown label
-   should differ. Use the resolved `cancerType` consistently as the catalog entry, seed key,
-   Builder fallback key, and `Case.diseaseType`.
+    filename under `tmh-app/src/forms/generatedForms/<form-name>.json` as `formName`. Default
+    `cancerType` to `formName`; ask one focused question only when the desired dropdown label
+    should differ. The filename must match `formName`. Use the resolved `cancerType` consistently
+    as the catalog entry, seed key, Builder fallback key, and `Case.diseaseType`; `cancerType` may
+    differ from `formName` when the user clarifies that the application label should differ.
 2. Generate and validate the SurveyJS JSON, then save it to
    `tmh-app/src/forms/generatedForms/<form-name>.json` before changing application files.
 3. Inspect `tmh-app/src/forms/cancerTypes.ts` and add `cancerType` exactly once to its catalog,
    preserving the existing order unless the user specifies placement. Do not alter unrelated
    entries.
-4. Import the generated JSON from its `generatedForms` path in `tmh-app/src/forms/seed.ts`.
-   Seed it idempotently: when `listForms(cancerType)` is empty, call
-   `saveForm(cancerType, generatedForm)`; otherwise leave the saved versions unchanged. If the
-   build rejects JSON imports, make the smallest compatible configuration adjustment, such as
-   enabling JSON module resolution in `tmh-app/tsconfig.app.json`.
+4. Before editing `tmh-app/src/forms/seed.ts`, inspect it for an existing import of the generated
+    JSON and an existing seed branch for `cancerType`. Preserve existing entries, and do not add
+    duplicate imports or branches when rerunning the workflow. Import the generated JSON from its
+    `generatedForms` path when it is not already imported. Seed it idempotently: when
+    `listForms(cancerType)` is empty, call
+    `saveForm(cancerType, generatedForm)`; otherwise leave the saved versions unchanged. If the
+    build rejects JSON imports, make the smallest compatible configuration adjustment, such as
+    enabling JSON module resolution in `tmh-app/tsconfig.app.json`.
 5. Inspect `tmh-app/src/builder/BuilderPage.tsx`. If it has an explicit `seedFor` mapping, add
    the generated form under `cancerType` so `getLatestForm(cancerType)?.surveyJson ??
    seedFor(cancerType)` cannot silently fall back to the Neck form. Preserve saved-form lookup.
@@ -88,8 +92,11 @@ it in this exact order:
    deterministic case only when no existing case uses `cancerType`. It must satisfy every
    `Case` property, use `diseaseType: cancerType`, avoid real PDF patient details, and avoid
    duplicate cases on reruns.
-7. Validate the integration, perform a consistency review, and return the generated object as
-   raw JSON only. Do not add runtime directory scanning or a generated registry abstraction.
+7. Validate the integration, perform a consistency review, and run `npm run build` from
+    `tmh-app`, or the available project validation command if that script is unavailable. Report
+    unrelated pre-existing validation failures separately; do not silently treat a failed command
+    as complete validation. Return the generated object as raw JSON only. Do not add runtime
+    directory scanning or a generated registry abstraction.
 
 ## Validation Before Return
 
@@ -112,7 +119,15 @@ Check all of the following against the complete PDF:
   exists.
 - The mock case conforms to every `Case` property, uses `diseaseType: cancerType`, and is not a
   duplicate.
-- The form filename, catalog label, seed key, Builder key, and mock-case disease type match.
+- The output filename matches `formName`; the catalog label, seed key, Builder key, and mock-case
+  disease type match `cancerType`. `cancerType` may differ from `formName` when clarified by the
+  user.
+- Before editing `tmh-app/src/forms/seed.ts`, any existing generated JSON import and
+  `cancerType` seed branch were checked, existing entries were preserved, and reruns do not add
+  duplicate imports or branches.
+- `npm run build` was run from `tmh-app`, or the available project validation command when that
+  script is unavailable. Any unrelated pre-existing failure is reported separately from
+  integration validation.
 - No patient lookup, auto-population, calculation, integration beyond this static registration
   and seeding workflow, PDF export, runtime directory scanning, or generated registry abstraction
   was introduced.
