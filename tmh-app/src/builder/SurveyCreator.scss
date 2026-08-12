@@ -49,6 +49,13 @@ $grey-2: #e2e8f0;
   .sd-title.sd-container-modern__title {
     display: none;
   }
+  .svc-sidebar__header-container {
+    box-shadow: inset 0 -2px 0 0 $primary-blue !important;
+  }
+
+  .svc-menu-action__button--selected {
+    background: rgba($primary-blue, 0.1) !important;
+  }
 }
 .svc-creator__banner {
   display: none !important;
@@ -123,11 +130,9 @@ $grey-2: #e2e8f0;
 .svc-question__content--selected:not(.svc-question__content--dragged) {
   box-shadow: 0 0 0 2px $primary-blue;
 }
-.svc-toolbox__item-banner .sv-svg-icon use {
-  fill: var(
-    --ctr-toolbox-item-icon-color-hovered,
-    var(--sjs-primary-backcolor, var(--primary, $primary-blue))
-  );
+.svc-toolbox__item-banner .sv-svg-icon use,
+.svc-toolbox__item-banner .sv-svg-icon use:focus {
+  fill: $primary-blue;
 }
 .svc-toolbox__tool .sv-dots__item:hover:enabled .sv-svg-icon use,
 .svc-toolbox__tool .sv-dots__item:focus:enabled .sv-svg-icon use,
