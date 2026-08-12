@@ -27,14 +27,14 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
               <p className="truncate text-xs text-slate-500">{user.email}</p>
             </div>
           </div>
-          <button
-            type="button"
-            aria-label="Settings"
-            title="Settings"
-            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          <span
+            role="img"
+            aria-label="Settings (unavailable)"
+            title="Settings (unavailable)"
+            className="flex h-9 w-9 items-center justify-center rounded text-white"
           >
             <Settings className="h-5 w-5" />
-          </button>
+          </span>
           <button
             type="button"
             onClick={logout}

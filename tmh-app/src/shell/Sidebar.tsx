@@ -41,7 +41,7 @@ export default function Sidebar() {
         onClick={() => setCollapsed(value => !value)}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        className="absolute -right-3 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-white/30 bg-white text-slate-700 shadow-sm hover:bg-slate-100"
+        className="absolute -right-3 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-white/30 bg-white text-slate-700 shadow-sm hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--brand-hex)]"
       >
         {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
       </button>
@@ -54,7 +54,7 @@ export default function Sidebar() {
             aria-label={l.label}
             title={l.label}
             className={({ isActive }) =>
-              `flex items-center rounded px-3 py-2 text-sm font-medium ${collapsed ? 'justify-center' : 'gap-2'} ${isActive ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`
+              `flex items-center rounded px-3 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--brand-hex)] ${collapsed ? 'justify-center' : 'gap-2'} ${isActive ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`
             }
           >
             {l.icon}
