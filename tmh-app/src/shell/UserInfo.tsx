@@ -58,14 +58,6 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
           <p className="truncate text-xs text-white/70">{user.email}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <NavLink
-            to="/settings"
-            aria-label="Settings"
-            title="Settings"
-            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
-          >
-            <Settings className="h-5 w-5" />
-          </NavLink>
           <button
             type="button"
             onClick={logout}
@@ -75,6 +67,14 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
           >
             <LogOut className="h-4 w-4" />
           </button>
+          <NavLink
+            to="/settings"
+            aria-label="Settings"
+            title="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <Settings className="h-5 w-5" />
+          </NavLink>
         </div>
       </div>
     </div>
