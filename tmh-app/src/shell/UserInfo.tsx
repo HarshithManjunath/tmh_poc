@@ -12,18 +12,20 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
   if (collapsed) {
     return (
       <div className="border-t border-white/20 p-3">
-        <div className="group relative flex flex-col items-center gap-2">
-          <button
-            type="button"
-            aria-label="View user information"
-            title="View user information"
-            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
-          >
-            <UserRound className="h-5 w-5" />
-          </button>
-          <div className="absolute bottom-0 left-full z-20 ml-3 hidden w-48 rounded border border-slate-200 bg-white p-3 text-slate-900 shadow-lg group-hover:block group-focus-within:block">
-            <p className="truncate text-sm font-semibold">{user.name}</p>
-            <p className="truncate text-xs text-slate-500">{user.email}</p>
+        <div className="flex flex-col items-center gap-2">
+          <div className="group relative w-full">
+            <button
+              type="button"
+              aria-label="View user information"
+              title="View user information"
+              className="mx-auto flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+            >
+              <UserRound className="h-5 w-5" />
+            </button>
+            <div className="absolute bottom-0 left-full z-20 hidden w-48 rounded border border-slate-200 bg-white p-3 text-slate-900 shadow-lg group-hover:block group-focus-within:block">
+              <p className="truncate text-sm font-semibold">{user.name}</p>
+              <p className="truncate text-xs text-slate-500">{user.email}</p>
+            </div>
           </div>
           <button
             type="button"
