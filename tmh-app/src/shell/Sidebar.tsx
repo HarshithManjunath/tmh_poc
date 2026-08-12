@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { useEffect, useState, type ComponentType, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Form, NotepadText, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import UserInfo from './UserInfo'
 
@@ -30,8 +30,6 @@ export default function Sidebar() {
       // Storage may be unavailable; the sidebar remains usable without persistence.
     }
   }, [collapsed])
-
-  const CollapsibleUserInfo = UserInfo as unknown as ComponentType<{ collapsed: boolean }>
 
   return (
     <aside
@@ -64,7 +62,7 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <CollapsibleUserInfo collapsed={collapsed} />
+      <UserInfo collapsed={collapsed} />
     </aside>
   )
 }

@@ -1,13 +1,62 @@
 import { useAuth } from '../auth/auth-context'
+import { LogOut, Settings, UserRound } from 'lucide-react'
 
-export default function UserInfo() {
+interface UserInfoProps {
+  collapsed: boolean
+}
+
+export default function UserInfo({ collapsed }: UserInfoProps) {
   const { user, logout } = useAuth()
   if (!user) return null
+
+  if (collapsed) {
+    return (
+      <div className="border-t border-white/20 p-3">
+        <div className="group relative flex flex-col items-center gap-2">
+          <button
+            type="button"
+            aria-label="View user information"
+            title="View user information"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <UserRound className="h-5 w-5" />
+          </button>
+          <div className="absolute bottom-0 left-full z-20 ml-3 hidden w-48 rounded border border-slate-200 bg-white p-3 text-slate-900 shadow-lg group-hover:block group-focus-within:block">
+            <p className="truncate text-sm font-semibold">{user.name}</p>
+            <p className="truncate text-xs text-slate-500">{user.email}</p>
+          </div>
+          <button
+            type="button"
+            aria-label="Settings"
+            title="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={logout}
+            aria-label="Logout"
+            title="Logout"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="border-t border-white/20 p-3">
       <p className="text-sm font-semibold text-white truncate">{user.name}</p>
       <p className="text-xs text-white/70 truncate">{user.email}</p>
-      <button onClick={logout} className="mt-2 w-full text-white bg-white/10 hover:bg-white/20 rounded px-3 py-1.5 text-sm">
+      <button
+        type="button"
+        onClick={logout}
+        className="mt-2 flex w-full items-center justify-center gap-2 rounded bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+      >
+        <LogOut className="h-4 w-4" />
         Logout
       </button>
     </div>
