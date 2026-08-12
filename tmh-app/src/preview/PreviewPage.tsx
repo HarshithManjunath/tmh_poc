@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { Model } from "survey-core";
 import { Survey } from "survey-react-ui";
 import "survey-core/survey-core.css";
@@ -15,40 +16,31 @@ import { writeJSON } from "../lib/storage/storage";
 
 export default function PreviewPage() {
   const [searchParams] = useSearchParams();
-  const [cancerType, setCancerType] = useState(() => {
+  const navigate = useNavigate();
+  const caseData = useMemo(
+    () => getCases().find((c) => c.id === searchParams.get("caseId")) ?? null,
+    [searchParams],
+  );
+  const cancerType = useMemo(() => {
+    if (caseData?.diseaseType) return caseData.diseaseType;
     const t = searchParams.get("type");
     return t && CANCER_TYPES.includes(t) ? t : DEFAULT_CANCER_TYPE;
-  });
-  const [nav, setNav] = useState<NavNode[]>(() => {
-    const f = getLatestForm(cancerType);
-    return f ? buildNavTree((f.surveyJson as any).pages ?? []) : [];
-  });
+  }, [caseData, searchParams]);
+  const [nav, setNav] = useState<NavNode[]>([]);
   const [selected, setSelected] = useState<{ path: number[] }>({ path: [0] });
   const dataRef = useRef<Record<string, any>>({});
   const [data, setData] = useState<Record<string, any>>({});
   const [savedMsg, setSavedMsg] = useState("");
 
-  const typeFromUrl = searchParams.get("type");
-  const caseData = useMemo(
-    () => getCases().find((c) => c.id === searchParams.get("caseId")) ?? null,
-    [searchParams],
-  );
   useEffect(() => {
-    if (
-      typeFromUrl &&
-      CANCER_TYPES.includes(typeFromUrl) &&
-      typeFromUrl !== cancerType
-    ) {
-      setCancerType(typeFromUrl);
-      const f = getLatestForm(typeFromUrl);
-      setNav(f ? buildNavTree((f.surveyJson as any).pages ?? []) : []);
-      setSelected({ path: [0] });
-      dataRef.current = {};
-      setData({});
-      setSavedMsg("");
-    }
+    const f = getLatestForm(cancerType);
+    setNav(f ? buildNavTree((f.surveyJson as any).pages ?? []) : []);
+    setSelected({ path: [0] });
+    dataRef.current = {};
+    setData({});
+    setSavedMsg("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeFromUrl]);
+  }, [cancerType]);
 
   const section = useMemo(() => nav[selected.path[0]] ?? null, [nav, selected]);
   const current = useMemo(
@@ -114,16 +106,6 @@ export default function PreviewPage() {
     setSavedMsg("Response saved");
   };
 
-  const chooseType = (ct: string) => {
-    setCancerType(ct);
-    const f = getLatestForm(ct);
-    setNav(f ? buildNavTree((f.surveyJson as any).pages ?? []) : []);
-    setSelected({ path: [0] });
-    dataRef.current = {};
-    setData({});
-    setSavedMsg("");
-  };
-
   const preOrderPaths = (root: NavNode): number[][] => {
     const paths: number[][] = [];
     const walk = (node: NavNode, base: number[]) => {
@@ -185,21 +167,17 @@ export default function PreviewPage() {
   return (
     <div className="flex h-full">
       <aside className="w-60 bg-white border-r border-slate-200 flex flex-col">
-        <div className="p-3">
-          <label className="text-sm font-medium text-slate-700">
-            Cancer Type
-          </label>
-          <select
-            value={cancerType}
-            onChange={(e) => chooseType(e.target.value)}
-            className="w-full border border-slate-300 rounded px-2 py-1.5 mt-1"
+        <div className="p-3 flex items-center gap-2">
+          <button
+            onClick={() => navigate("/worklist")}
+            className="text-slate-600 hover:text-slate-900"
+            aria-label="Back to worklist"
           >
-            {CANCER_TYPES.map((ct) => (
-              <option key={ct} value={ct}>
-                {ct}
-              </option>
-            ))}
-          </select>
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <p className="text-sm font-medium text-slate-700">
+            {caseData ? caseData.diseaseType : "Cancer Type"}
+          </p>
         </div>
         <nav className="flex-1 overflow-auto p-2 space-y-1">
           {nav.map((n) => (
@@ -227,17 +205,12 @@ export default function PreviewPage() {
         </aside>
       )}
       <main className="flex-1 overflow-auto bg-white relative">
-        {/* <div className="px-6 pt-4">
-          <h1 className="text-2xl font-bold text-slate-800">Preview Form</h1>
-        </div> */}
         {surveyModel ? (
           <div className="compact-survey">
             <Survey model={surveyModel} />
           </div>
         ) : (
-          <div className="p-6 text-slate-500">
-            Select a cancer type and form version.
-          </div>
+          <div className="p-6 text-slate-500">No form available.</div>
         )}
         {savedMsg && <p className="px-6 text-green-700 text-sm">{savedMsg}</p>}
         <div className="px-6 py-4 border-t border-slate-200 flex items-center gap-3 sticky bottom-0 bg-white">

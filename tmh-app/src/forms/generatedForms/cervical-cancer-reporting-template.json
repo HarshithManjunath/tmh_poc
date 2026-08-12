@@ -1,0 +1,434 @@
+{
+  "title": "Cervical Cancer Reporting Template",
+  "pages": [
+    {
+      "name": "caseInformation",
+      "title": "Case Information",
+      "elements": [
+        { "type": "text", "name": "caseNumber", "title": "Case Number" },
+        {
+          "type": "text",
+          "name": "patientName",
+          "title": "Name",
+          "description": "Auto populate as per case no"
+        },
+        {
+          "type": "text",
+          "name": "ageSex",
+          "title": "Age/Sex",
+          "description": "Auto populate as per case no"
+        },
+        { "type": "text", "name": "doctorName", "title": "Name of the doctor" }
+      ]
+    },
+    {
+      "name": "clinicalDetails",
+      "title": "1. Clinical Details",
+      "elements": [
+        {
+          "type": "comment",
+          "name": "perVaginalExamination",
+          "title": "Per Vaginal Examination"
+        },
+        {
+          "type": "radiogroup",
+          "name": "biopsyAvailability",
+          "title": "Biopsy",
+          "choices": ["Available", "Not Available"]
+        },
+        {
+          "type": "radiogroup",
+          "name": "hpe",
+          "title": "HPE",
+          "choices": [
+            "Squamous",
+            "Adenosquamous",
+            "Adenocarcinoma",
+            "Others, Neuroendocrine / Lymphoma, etc."
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "differentiated",
+          "title": "Differentiated",
+          "choices": ["Well", "Moderate", "Poor"]
+        }
+      ]
+    },
+    {
+      "name": "technique",
+      "title": "2. Technique",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "modality",
+          "title": "Modality",
+          "choices": ["USG", "CT", "MRI"]
+        }
+      ]
+    },
+    {
+      "name": "comparison",
+      "title": "3. Comparison",
+      "elements": [
+        {
+          "type": "date",
+          "name": "comparisonDocumentDate",
+          "title": "Date of Document",
+          "description": "Enable date picker"
+        },
+        {
+          "type": "radiogroup",
+          "name": "comparisonModality",
+          "title": "Modality of comparison study",
+          "choices": ["MRI", "USG", "PET CT", "CT"]
+        }
+      ]
+    },
+    {
+      "name": "findings",
+      "title": "4. Findings",
+      "elements": [
+        {
+          "type": "panel",
+          "name": "uterocervix",
+          "title": "I Uterocervix",
+          "elements": [
+            {
+              "type": "radiogroup",
+              "name": "morphology",
+              "title": "Morphology",
+              "choices": ["Exophytic", "Infiltrative", "Endophytic"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "signalIntensityT2",
+              "title": "Signal Intensity of T2",
+              "choices": ["Hyperintense", "Hypointense", "Intermediate"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "dwi",
+              "title": "DWI",
+              "choices": [
+                "Diffusion restriction present",
+                "Diffusion restriction absent",
+                "Not Applicable"
+              ]
+            },
+            {
+              "type": "text",
+              "name": "adcValue",
+              "title": "ADC Value (*10^-3mm2/s) (If diffusion present, then ADC)",
+              "description": "Enable if the response to 4C is Diffusion restriction present",
+              "visibleIf": "{dwi} = 'Diffusion restriction present'"
+            },
+            {
+              "type": "text",
+              "name": "tumourSize",
+              "title": "Tumour Size (greatest dimension in cm)"
+            },
+            {
+              "type": "radiogroup",
+              "name": "superiorExtent",
+              "title": "Superior Extent",
+              "choices": [
+                "Limited to cervix",
+                "Reaches interna os",
+                "Extends above internal os"
+              ]
+            },
+            {
+              "type": "text",
+              "name": "tumourToInternalCervicalOsDistance",
+              "title": "Tumour to internal cervical os distance"
+            },
+            {
+              "type": "radiogroup",
+              "name": "cervicalStromalInvasion",
+              "title": "Cervical stromal invasion",
+              "choices": [
+                "Limited to inner 2/3rd",
+                "Involves outer 1/3rd",
+                "Full thickness stromal invasion"
+              ]
+            },
+            {
+              "type": "radiogroup",
+              "name": "parametrialInvasion",
+              "title": "Parametrial Invasion",
+              "choices": ["Present", "Absent"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "vaginalInvasion",
+              "title": "Vaginal Invasion",
+              "choices": ["Equivocal", "Present", "Absent"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "extentOfVaginalInvolvement",
+              "title": "Extent of Vaginal Involvement",
+              "choices": ["Limited to upper 2/3rd", "Lower 1/3rd"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "distalUreterInvolvementOrHydroureter",
+              "title": "Distal Ureter involvement or Hydroureter",
+              "choices": ["Absent", "Present"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "distalUreterLaterality",
+              "title": "If Present, Laterality",
+              "choices": ["Right", "Left", "Both"],
+              "visibleIf": "{distalUreterInvolvementOrHydroureter} = 'Present'"
+            },
+            {
+              "type": "radiogroup",
+              "name": "pelvicSidewallInvasion",
+              "title": "Pelvic Sidewall Invasion",
+              "choices": ["Present", "Absent"]
+            },
+            {
+              "type": "checkbox",
+              "name": "pelvicSidewallInvasionDetails",
+              "title": "If Present, Pelvic Sidewall Invasion",
+              "choices": [
+                "Involves the pelvic bones",
+                "Encases the iliac vessels",
+                "Levator ani muscles",
+                "Pyriformis",
+                "Infiltrates obturator internus"
+              ],
+              "description": "Multiple choice possible",
+              "visibleIf": "{pelvicSidewallInvasion} = 'Present'"
+            },
+            {
+              "type": "radiogroup",
+              "name": "bladderInvasion",
+              "title": "Bladder Invasion",
+              "choices": ["Absent", "Present"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "bladderInvasionDetails",
+              "title": "If present, bladder invasion",
+              "choices": [
+                "Invasion of bladder serosal surface",
+                "Invasion of bladder muscle",
+                "Extension into lumen",
+                "Fistulous formation with the bladder"
+              ],
+              "visibleIf": "{bladderInvasion} = 'Present'"
+            },
+            {
+              "type": "radiogroup",
+              "name": "rectalInvasion",
+              "title": "Rectal Invasion",
+              "choices": ["Absent", "Present"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "rectalInvasionDetails",
+              "title": "If present, Rectal invasion",
+              "choices": [
+                "Invasion of rectal serosal surface",
+                "Invasion of rectal muscle",
+                "Extension into lumen",
+                "Fistulous formation"
+              ],
+              "visibleIf": "{rectalInvasion} = 'Present'"
+            },
+            {
+              "type": "radiogroup",
+              "name": "retrovertedUterus",
+              "title": "Retroverted Uterus",
+              "choices": ["Yes", "No"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "hydroPyometra",
+              "title": "Hydro/Pyometra",
+              "choices": ["Yes", "No"]
+            },
+            {
+              "type": "text",
+              "name": "otherAssociatedBenignUterineCondition",
+              "title": "Other associated benign uterine condition"
+            },
+            {
+              "type": "radiogroup",
+              "name": "ovaries",
+              "title": "Ovaries",
+              "choices": ["Normal", "Solid Mass"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "tubes",
+              "title": "Tubes",
+              "choices": ["Hydrosalpinx", "Pypsalpinx"]
+            },
+            {
+              "type": "panel",
+              "name": "lymphadenopathy",
+              "title": "Lymphadenopathy",
+              "elements": [
+                {
+                  "type": "radiogroup",
+                  "name": "inguinalLaterality",
+                  "title": "Inguinal - Laterality",
+                  "choices": ["Right", "Left", "Both"]
+                },
+                {
+                  "type": "text",
+                  "name": "inguinalSize",
+                  "title": "Inguinal - Size (in mm)"
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "externalIliacLaterality",
+                  "title": "External Iliac - Laterality",
+                  "choices": ["Right", "Left", "Both"]
+                },
+                {
+                  "type": "text",
+                  "name": "externalIliacSize",
+                  "title": "External Iliac - Size (in mm)"
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "internalIliacLaterality",
+                  "title": "Internal Iliac - Laterality",
+                  "choices": ["Right", "Left", "Both"]
+                },
+                {
+                  "type": "text",
+                  "name": "internalIliacSize",
+                  "title": "Internal Iliac - Size (in mm)"
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "commonIliacLaterality",
+                  "title": "Common Iliac - Laterality",
+                  "choices": ["Right", "Left", "Both"]
+                },
+                {
+                  "type": "text",
+                  "name": "commonIliacSize",
+                  "title": "Common Iliac - Size (in mm)"
+                }
+              ]
+            },
+            {
+              "type": "radiogroup",
+              "name": "paraAortic",
+              "title": "Para-aortic",
+              "choices": ["Below renal vessels", "Above renal vessels"]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "kidneyUreterAndBladder",
+          "title": "II Kidney, Ureter and Bladder",
+          "elements": [
+            {
+              "type": "radiogroup",
+              "name": "hydronephrosis",
+              "title": "Hydronephrosis",
+              "choices": ["Absent", "Mild", "Moderate", "Severe"]
+            },
+            {
+              "type": "text",
+              "name": "renalFunction",
+              "title": "Renal Function (If Contrast is administered)"
+            },
+            {
+              "type": "checkbox",
+              "name": "metastases",
+              "title": "Metastases",
+              "choices": [
+                "Liver",
+                "Lungs",
+                "Adrenals",
+                "Peritoneum",
+                "Bones",
+                "Other, Pls Specify_____"
+              ],
+              "description": "Multiple choice possible"
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "name": "otherFindings",
+          "title": "III Any other findings, if present"
+        }
+      ]
+    },
+    {
+      "name": "impression",
+      "title": "5. Impression",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "impressionBiopsy",
+          "title": "Biopsy",
+          "choices": ["Not Known", "Known"]
+        },
+        {
+          "type": "text",
+          "name": "adenocarcinomaIhc",
+          "title": "If Adenocarcinoma, IHC",
+          "visibleIf": "{hpe} = 'Adenocarcinoma'"
+        },
+        {
+          "type": "checkbox",
+          "name": "cervicalOrUterocervicalMassPresentIn",
+          "title": "Cervical or Uterocervical mass present in",
+          "choices": [
+            "Parametrial Invasion",
+            "Vaginal Invasion",
+            "Distal Ureter Involvement",
+            "Pelvic Sidewall Invasion",
+            "Bladder/Rectal Invasion"
+          ],
+          "description": "Auto populate if present"
+        },
+        {
+          "type": "checkbox",
+          "name": "nodes",
+          "title": "Nodes",
+          "choices": [
+            "Iliac Nodes",
+            "Para Aortic Nodes",
+            "Others, Pls Specify"
+          ],
+          "description": "Auto populate"
+        },
+        {
+          "type": "checkbox",
+          "name": "distantMetastases",
+          "title": "Distant Metastases",
+          "choices": [
+            "Liver",
+            "Lungs",
+            "Peritoneum",
+            "Ovaries",
+            "Metastatic Nodes",
+            "Bones",
+            "Other, Pls Specify___"
+          ],
+          "description": "Multiple Choice possible"
+        },
+        {
+          "type": "radiogroup",
+          "name": "figoStage2018",
+          "title": "FIGO Stage (2018)",
+          "choices": ["1A", "1B", "IIA", "IIB", "IIIA", "IIIB", "IVA", "IVB"]
+        }
+      ]
+    }
+  ]
+}

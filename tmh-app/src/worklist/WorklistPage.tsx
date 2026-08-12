@@ -6,6 +6,7 @@ import Badge, { type BadgeTone } from '../components/Badge'
 import FilterPill from '../components/FilterPill'
 import Icon from '../components/Icon'
 import ProgressBar from '../components/ProgressBar'
+import reportPdf from '../report/Report.pdf'
 
 type CategoryFilter = 'All' | 'Provisional' | 'Final' | 'Critical' | 'Emergency'
 type TatFilter = 'All' | 'Emergency' | 'Crossed' | 'lt75' | 'lt100' | 'gt100'
@@ -108,7 +109,6 @@ export default function WorklistPage() {
   const [priority, setPriority] = useState<string>('All Priority')
   const [sort, setSort] = useState<SortPreset>('priority-status')
   const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [expanded, setExpanded] = useState<string | null>(null)
 
   const counts = useMemo(
     () => ({
@@ -243,7 +243,7 @@ export default function WorklistPage() {
             className="w-full rounded-md border border-slate-300 bg-white py-1.5 pl-8 pr-9 text-sm text-slate-700 outline-none transition focus:border-slate-400"
           />
           <button title="Filters" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600:text-slate-200">
-            <Icon name={expanded ? 'check' : 'filter'} className="h-4 w-4" />
+            <Icon name="filter" className="h-4 w-4" />
           </button>
         </div>
         <select
@@ -303,20 +303,17 @@ export default function WorklistPage() {
                 <th className="px-3 py-3 font-medium">AI</th>
                 <th className="px-3 py-3 font-medium">Critical</th>
                 <th className="px-3 py-3 font-medium">View Scan</th>
-                <th className="w-10 px-3 py-3" />
+                <th className="px-3 py-3 font-medium">View Report</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filtered.map(c => {
-                const isExpanded = expanded === c.id
                 return (
                   <RowGroup
                     key={c.id}
                     c={c}
                     selected={selected.has(c.id)}
                     onToggle={() => toggleRow(c.id)}
-                    expanded={isExpanded}
-                    onExpand={() => setExpanded(isExpanded ? null : c.id)}
                   />
                 )
               })}
@@ -337,14 +334,10 @@ function RowGroup({
   c,
   selected,
   onToggle,
-  expanded,
-  onExpand,
 }: {
   c: Case
   selected: boolean
   onToggle: () => void
-  expanded: boolean
-  onExpand: () => void
 }) {
   const firstRow = (
     <tr className={selected ? 'bg-blue-50' : 'hover:bg-slate-50:bg-slate-800/40'}>
@@ -429,42 +422,18 @@ function RowGroup({
         )}
       </td>
       <td className="px-3 py-3">
-        <button
-          onClick={onExpand}
-          title="Details"
-          className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600:bg-slate-700:text-slate-200"
+        <a
+          href={reportPdf}
+          target="_blank"
+          rel="noreferrer"
+          title="Open report PDF"
+          className="text-blue-600 hover:text-blue-800 hover:underline"
         >
-          <Icon name="chevron-down" className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`} />
-        </button>
+          View Report
+        </a>
       </td>
     </tr>
   )
 
-  return (
-    <>
-      {firstRow}
-      {expanded && (
-        <tr className="bg-slate-50">
-          <td />
-          <td colSpan={10} className="px-4 py-4">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm md:grid-cols-4">
-              <Detail label="MRN" value={c.mrn} />
-              <Detail label="Requisition" value={c.requisitionNo} />
-              <Detail label="Hospital" value={c.hospital} />
-              <Detail label="Study Region" value={c.studyRegion} />
-            </div>
-          </td>
-        </tr>
-      )}
-    </>
-  )
-}
-
-function Detail({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-xs uppercase tracking-wide text-slate-400">{label}</p>
-      <p className="text-slate-700">{value}</p>
-    </div>
-  )
+  return firstRow
 }
