@@ -13,7 +13,7 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
     return (
       <div className="border-t border-white/20 p-3">
         <div className="flex flex-col items-center gap-2">
-          <div className="group relative w-full">
+          <div className="group relative -mx-3 w-[calc(100%+1.5rem)]">
             <button
               type="button"
               aria-label="View user information"

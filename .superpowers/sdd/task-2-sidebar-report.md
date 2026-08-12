@@ -70,3 +70,26 @@ Output summary:
 - Build completed with exit code 0.
 - Vite emitted the existing warning that output chunks exceed 500 kB after minification; the JavaScript bundle was 3,040.57 kB before gzip.
 - `git diff --check -- tmh-app/src/shell/UserInfo.tsx tmh-app/src/shell/Sidebar.tsx` completed without whitespace errors.
+
+## Review v2 Important Finding Fix
+
+- Expanded the user group with `-mx-3 w-[calc(100%+1.5rem)]` so it spans the full 64px collapsed rail despite the parent `p-3` padding. The existing `left-full` panel is therefore anchored to the rail's outer right edge.
+- Kept the user icon and panel as the only members of the hover/focus group. The full-width group remains the continuous pointer bridge into the panel, with no gap, and settings/logout behavior is unchanged.
+
+## Review v2 Verification
+
+Commands:
+
+```text
+npm run build
+git diff --check
+```
+
+`npm run build` was run from `tmh-app`.
+
+Output summary:
+
+- `tsc -b` completed successfully.
+- Vite transformed 1834 modules and completed the production build with exit code 0.
+- Vite emitted the existing warning that output chunks exceed 500 kB after minification.
+- `git diff --check` completed without whitespace errors.
