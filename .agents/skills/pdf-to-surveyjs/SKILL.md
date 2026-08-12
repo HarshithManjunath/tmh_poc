@@ -11,23 +11,29 @@ does not define.
 
 ## Workflow
 
-1. Confirm that a PDF template was supplied and identify the document to inspect.
-2. Determine the form name from the PDF. If it is unclear, missing, or cannot be used as a
-   filename, ask the user for a valid form name before generating anything.
-3. Inspect every page completely before writing the SurveyJS definition. Record, in source
-   order, every section, label, control, option, required indicator, note, repeated group,
-   and conditional cue. Include text in tables, headers, footers, and annotations when it
-   describes the form or its responses.
-4. Build an internal inventory before modeling. For each response, record its exact visible
-   label and options, control cardinality, requiredness evidence, source order, and any
-   dependency or repetition evidence.
-5. Map the inventory conservatively to SurveyJS pages and elements.
-6. Resolve every material ambiguity before producing JSON. Ask one focused question at a
-   time, naming the exact field or relationship in doubt and offering concrete alternatives
-   where useful. Do not silently guess, return a partial draft, or continue past an
-   unresolved control type, option, requiredness, dependency, or repetition rule.
-7. Validate the completed object, save it, compare it with the complete PDF one final time,
-   and only then integrate it into the application and return the object.
+1. Confirm that a PDF template was supplied and identify the document to inspect. Resolve
+   `formName` from the PDF and `cancerType` for the application before generating anything. If
+   `formName` is unclear, missing, or cannot be used as a filename, ask for a valid form name.
+   Default `cancerType` to `formName`; ask one focused question only when the application label
+   should differ.
+2. Inspect every page completely, build the response inventory, map it conservatively to
+   SurveyJS pages and elements, resolve every material ambiguity, and then generate and validate
+   the completed SurveyJS JSON. Record, in source order, every section, label, control, option,
+   required indicator, note, repeated group, and conditional cue. Include text in tables,
+   headers, footers, and annotations when it describes the form or its responses. For each
+   response, record its exact visible label and options, control cardinality, requiredness
+   evidence, source order, and any dependency or repetition evidence. Ask one focused question at
+   a time for unresolved control type, option, requiredness, dependency, or repetition; do not
+   silently guess, return a partial draft, or continue while a material ambiguity remains.
+3. Save the validated JSON to
+   `tmh-app/src/forms/generatedForms/<form-name>.json`, using the resolved `formName`.
+4. Perform the final page-by-page comparison against the complete PDF. Do not edit application
+   files before this comparison is complete.
+5. Only after that comparison, edit application files for the catalog, form seeding, Builder
+   fallback, and mock case, in that order.
+6. Run project validation and consistency checks, including the available build command, and
+   report unrelated pre-existing failures separately.
+7. Return the generated object as raw JSON only after successful integration and validation.
 
 ## Mapping Rules
 
@@ -63,21 +69,14 @@ the source value exactly.
 
 ## Application Integration
 
-After the generated JSON has passed the complete PDF comparison, integrate it in this exact order.
-The generation and save occur in step 2 before any application source is edited:
+Perform the following application edits only after steps 1-4 of the base workflow are complete.
+The generated JSON must already be validated, saved, and compared page by page against the
+complete PDF. This section covers step 5 of the base workflow and must not be started earlier.
 
-1. Resolve `formName` for the filename and `cancerType` for the application. Use the generated
-    filename under `tmh-app/src/forms/generatedForms/<form-name>.json` as `formName`. Default
-    `cancerType` to `formName`; ask one focused question only when the desired dropdown label
-    should differ. The filename must match `formName`. Use the resolved `cancerType` consistently
-    as the catalog entry, seed key, Builder fallback key, and `Case.diseaseType`; `cancerType` may
-    differ from `formName` when the user clarifies that the application label should differ.
-2. Generate and validate the SurveyJS JSON, then save it to
-   `tmh-app/src/forms/generatedForms/<form-name>.json` before changing application files.
-3. Inspect `tmh-app/src/forms/cancerTypes.ts` and add `cancerType` exactly once to its catalog,
+1. Inspect `tmh-app/src/forms/cancerTypes.ts` and add `cancerType` exactly once to its catalog,
    preserving the existing order unless the user specifies placement. Do not alter unrelated
    entries.
-4. Before editing `tmh-app/src/forms/seed.ts`, inspect it for an existing import of the generated
+2. Before editing `tmh-app/src/forms/seed.ts`, inspect it for an existing import of the generated
     JSON and an existing seed branch for `cancerType`. Preserve existing entries, and do not add
     duplicate imports or branches when rerunning the workflow. Import the generated JSON from its
     `generatedForms` path when it is not already imported. Seed it idempotently: when
@@ -85,18 +84,19 @@ The generation and save occur in step 2 before any application source is edited:
     `saveForm(cancerType, generatedForm)`; otherwise leave the saved versions unchanged. If the
     build rejects JSON imports, make the smallest compatible configuration adjustment, such as
     enabling JSON module resolution in `tmh-app/tsconfig.app.json`.
-5. Inspect `tmh-app/src/builder/BuilderPage.tsx`. If it has an explicit `seedFor` mapping, add
+3. Inspect `tmh-app/src/builder/BuilderPage.tsx`. If it has an explicit `seedFor` mapping, add
    the generated form under `cancerType` so `getLatestForm(cancerType)?.surveyJson ??
    seedFor(cancerType)` cannot silently fall back to the Neck form. Preserve saved-form lookup.
-6. Inspect `tmh-app/src/cases/seed.ts` and `tmh-app/src/cases/types.ts`. Add exactly one fictional,
+4. Inspect `tmh-app/src/cases/seed.ts` and `tmh-app/src/cases/types.ts`. Add exactly one fictional,
    deterministic case only when no existing case uses `cancerType`. It must satisfy every
    `Case` property, use `diseaseType: cancerType`, avoid real PDF patient details, and avoid
    duplicate cases on reruns.
-7. Validate the integration, perform a consistency review, and run `npm run build` from
+5. Complete step 6 of the base workflow: validate the integration, perform a consistency review,
+   and run `npm run build` from
     `tmh-app`, or the available project validation command if that script is unavailable. Report
     unrelated pre-existing validation failures separately; do not silently treat a failed command
-    as complete validation. Return the generated object as raw JSON only. Do not add runtime
-    directory scanning or a generated registry abstraction.
+   as complete validation. Return the generated object as raw JSON only in step 7. Do not add
+   runtime directory scanning or a generated registry abstraction.
 
 ## Validation Before Return
 
