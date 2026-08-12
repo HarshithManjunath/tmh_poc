@@ -1,4 +1,5 @@
-﻿import type { Case } from './types'
+﻿import { readViewerSettings } from './viewerSettings'
+import type { Case } from './types'
 
 const seed: Case[] = [
   {
@@ -212,5 +213,10 @@ clinicalHistory: 'Two-week history of worsening headaches with focal neurology; 
 ]
 
 export function getCases(): Case[] {
-  return seed
+  const { weasisPath, qupathPath } = readViewerSettings()
+  return seed.map(c => {
+    if (weasisPath && c.scanUrl) return { ...c, scanUrl: weasisPath }
+    if (qupathPath && c.slideUrl) return { ...c, slideUrl: qupathPath }
+    return c
+  })
 }
