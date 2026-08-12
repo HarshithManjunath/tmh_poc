@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../auth/auth-context'
 import { LogOut, Settings, UserRound } from 'lucide-react'
 
@@ -27,14 +28,14 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
               <p className="truncate text-xs text-slate-500">{user.email}</p>
             </div>
           </div>
-          <span
-            role="img"
-            aria-label="Settings (unavailable)"
-            title="Settings (unavailable)"
-            className="flex h-9 w-9 items-center justify-center rounded text-white"
+          <NavLink
+            to="/settings"
+            aria-label="Settings"
+            title="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
           >
             <Settings className="h-5 w-5" />
-          </span>
+          </NavLink>
           <button
             type="button"
             onClick={logout}
@@ -51,16 +52,31 @@ export default function UserInfo({ collapsed }: UserInfoProps) {
 
   return (
     <div className="border-t border-white/20 p-3">
-      <p className="text-sm font-semibold text-white truncate">{user.name}</p>
-      <p className="text-xs text-white/70 truncate">{user.email}</p>
-      <button
-        type="button"
-        onClick={logout}
-        className="mt-2 flex w-full items-center justify-center gap-2 rounded bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
-      >
-        <LogOut className="h-4 w-4" />
-        Logout
-      </button>
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-white">{user.name}</p>
+          <p className="truncate text-xs text-white/70">{user.email}</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <NavLink
+            to="/settings"
+            aria-label="Settings"
+            title="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <Settings className="h-5 w-5" />
+          </NavLink>
+          <button
+            type="button"
+            onClick={logout}
+            aria-label="Logout"
+            title="Logout"
+            className="flex h-9 w-9 items-center justify-center rounded text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--brand-hex)]"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
